@@ -10,7 +10,26 @@ import (
 type sudokuArray [][]string
 
 func (i *sudokuArray) String() string {
-	return "join it somehow"
+	var grid []string
+
+	for row := 0; row < len(*i); row++ {
+		var rowToPrint []string
+
+		for col := 0; col < len(*i); col++ {
+			if col > 0 && col%3 == 0 {
+				rowToPrint = append(rowToPrint, "|")
+			}
+			rowToPrint = append(rowToPrint, (*i)[row][col])
+		}
+
+		if row > 0 && row%3 == 0 {
+			grid = append(grid, "---------------------\n")
+		}
+
+		grid = append(grid, strings.Join(rowToPrint, " "), "\n")
+	}
+
+	return strings.Join(grid, "")
 }
 
 func (i *sudokuArray) Set(value string) error {
@@ -33,10 +52,6 @@ var sudokuInput sudokuArray
 func main() {
 	flag.Var(&sudokuInput, "grid", "Sudoku grid ")
 	flag.Parse()
-
-	for i := 0; i < len(sudokuInput); i++ {
-		fmt.Println("test: ", sudokuInput[i])
-	}
 
 	fmt.Println(sudokuInput.String())
 }
