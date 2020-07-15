@@ -72,15 +72,24 @@ func SolveGrid(sudokuArray sudokuArray) {
 }
 
 func GridIsComplete(sudokuArray sudokuArray) bool {
+	for i := 0; i < len(sudokuArray); i++ {
+		rowIsComplete, _ := UnitIsComplete(sudokuArray[i])
+
+		// If every row is complete then the grid must be complete
+		if !rowIsComplete {
+			return false
+		}
+	}
+
 	return true
 }
 
-func SudokuUnitIsComplete(row []string) (bool, error) {
-	if !SudokuUnitIsValid(row) {
-		return false, errors.New("The unit provided is invalid: " + strings.Join(row, ","))
+func UnitIsComplete(unit []string) (bool, error) {
+	if !SudokuUnitIsValid(unit) {
+		return false, errors.New("The unit provided is invalid: " + strings.Join(unit, ","))
 	}
 
-	if contains(row, " ") {
+	if contains(unit, " ") {
 		return false, nil
 	}
 
