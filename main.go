@@ -56,5 +56,67 @@ func main() {
 	flag.Var(&sudokuInput, "grid", "Sudoku grid ")
 	flag.Parse() // Calls the Set() method on the sudokuInput
 
+	fmt.Println("Input grid:")
 	fmt.Println(sudokuInput.String())
+
+	for !GridIsComplete(sudokuInput) {
+		SolveGrid(sudokuInput)
+	}
+
+	fmt.Println("The grid has been solved!")
+	fmt.Println(sudokuInput.String())
+}
+
+func SolveGrid(sudokuArray sudokuArray) {
+
+}
+
+func GridIsComplete(sudokuArray sudokuArray) bool {
+	return true
+}
+
+func SudokuUnitIsComplete(row []string) (bool, error) {
+	if !SudokuUnitIsValid(row) {
+		return false, errors.New("The unit provided is invalid: " + strings.Join(row, ","))
+	}
+
+	if contains(row, " ") {
+		return false, nil
+	}
+
+	return true, nil
+}
+
+func SudokuUnitIsValid(unit []string) bool {
+	if len(unit) != 9 {
+		return false
+	}
+
+	var unitSet []string
+	for _, u := range unit {
+		if u != " " {
+			if contains(unitSet, u) {
+				// the unit has a duplicate non-empty element
+				return false
+			}
+
+			if !contains([]string{"1", "2", "3", "4", "5", "6", "7", "8", "9"}, u) {
+				// the unit has an invalid element
+				return false
+			}
+
+			unitSet = append(unitSet, u)
+		}
+	}
+
+	return true
+}
+
+func contains(slice []string, element string) bool {
+	for _, a := range slice {
+		if a == element {
+			return true
+		}
+	}
+	return false
 }
