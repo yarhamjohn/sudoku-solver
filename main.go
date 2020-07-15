@@ -7,8 +7,10 @@ import (
 	"strings"
 )
 
+// Set up a type to handle the 2-d sudoku grid
 type sudokuArray [][]string
 
+// Method for generating a string representation of the sudokuArray type
 func (i *sudokuArray) String() string {
 	var grid []string
 
@@ -32,6 +34,7 @@ func (i *sudokuArray) String() string {
 	return strings.Join(grid, "")
 }
 
+// Method for parsing a string into a sudokuArray type
 func (i *sudokuArray) Set(value string) error {
 	fullArray := strings.Split(value, ",")
 
@@ -51,7 +54,7 @@ var sudokuInput sudokuArray
 
 func main() {
 	flag.Var(&sudokuInput, "grid", "Sudoku grid ")
-	flag.Parse()
+	flag.Parse() // Calls the Set() method on the sudokuInput
 
 	fmt.Println(sudokuInput.String())
 }
