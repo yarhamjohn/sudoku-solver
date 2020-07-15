@@ -129,3 +129,53 @@ func TestGridIsComplete(t *testing.T) {
 		}
 	})
 }
+
+func TestSolveGrid(t *testing.T) {
+	t.Run("CompletesLastEmptySpace", func(t *testing.T) {
+		gridToTest := sudokuArray{
+			[]string{" ", "3", "4", "6", "7", "8", "9", "1", "2"},
+			[]string{"6", "7", "2", "1", "9", "5", "3", "4", "8"},
+			[]string{"1", "9", "8", "3", "4", "2", "5", "6", "7"},
+			[]string{"8", "5", "9", "7", "6", "1", "4", "2", "3"},
+			[]string{"4", "2", "6", "8", "5", "3", "7", "9", "1"},
+			[]string{"7", "1", "3", "9", "2", "4", "8", "5", "6"},
+			[]string{"9", "6", "1", "5", "3", "7", "2", "8", "4"},
+			[]string{"2", "8", "7", "4", "1", "9", "6", "3", "5"},
+			[]string{"3", "4", "5", "2", "8", "6", "1", "7", "9"},
+		}
+
+		SolveGrid(gridToTest)
+
+		if gridToTest[0][0] != "5" {
+			t.Errorf("SolveGrid should have correctly filled the missing element, but did not.")
+		}
+
+		if !GridIsComplete(gridToTest) {
+			t.Errorf("The gridToTest should be complete, but is not.")
+		}
+	})
+
+	t.Run("CompletesFirstRowWithOneEmptySpace", func(t *testing.T) {
+		gridToTest := sudokuArray{
+			[]string{" ", " ", "4", "6", "7", "8", "9", "1", "2"},
+			[]string{"6", "7", "2", "1", "9", "5", "3", "4", "8"},
+			[]string{"1", "9", "8", "3", "4", "2", "5", "6", "7"},
+			[]string{"8", "5", "9", " ", "6", "1", "4", "2", "3"},
+			[]string{"4", "2", "6", "8", "5", "3", "7", "9", "1"},
+			[]string{"7", "1", "3", "9", "2", "4", "8", "5", "6"},
+			[]string{"9", "6", "1", "5", "3", "7", "2", "8", "4"},
+			[]string{"2", "8", "7", "4", "1", "9", "6", "3", "5"},
+			[]string{"3", "4", "5", "2", "8", "6", "1", "7", "9"},
+		}
+
+		SolveGrid(gridToTest)
+
+		if gridToTest[3][3] != "7" {
+			t.Errorf("SolveGrid should have correctly filled the missing element, but did not.")
+		}
+
+		if GridIsComplete(gridToTest) {
+			t.Errorf("The gridToTest should not be complete, but is.")
+		}
+	})
+}

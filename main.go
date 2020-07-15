@@ -68,7 +68,25 @@ func main() {
 }
 
 func SolveGrid(sudokuArray sudokuArray) {
+	for row := 0; row < len(sudokuArray); row++ {
+		var nonEmptyElements []string
+		var elemToFill int
+		for col := 0; col < len(sudokuArray[row]); col++ {
+			if sudokuArray[row][col] != " " {
+				nonEmptyElements = append(nonEmptyElements, sudokuArray[row][col])
+			} else {
+				elemToFill = col
+			}
+		}
 
+		if len(nonEmptyElements) == 8 {
+			for _, elem := range []string{"1", "2", "3", "4", "5", "6", "7", "8", "9"} {
+				if !contains(nonEmptyElements, elem) {
+					sudokuArray[row][elemToFill] = elem
+				}
+			}
+		}
+	}
 }
 
 func GridIsComplete(sudokuArray sudokuArray) bool {
