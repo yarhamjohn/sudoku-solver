@@ -68,12 +68,26 @@ func main() {
 }
 
 func SolveGrid(sudokuArray sudokuArray) {
-	for row := 0; row < len(sudokuArray); row++ {
-		unitHasOneMissingElement, index := UnitHasOneMissingElement(sudokuArray[row])
-		if unitHasOneMissingElement {
+	for i := 0; i < len(sudokuArray); i++ {
+		rowHasOneMissingElement, colIndex := UnitHasOneMissingElement(sudokuArray[i])
+		if rowHasOneMissingElement {
 			for _, elem := range []string{"1", "2", "3", "4", "5", "6", "7", "8", "9"} {
-				if !contains(sudokuArray[row], elem) {
-					sudokuArray[row][index] = elem
+				if !contains(sudokuArray[i], elem) {
+					sudokuArray[i][colIndex] = elem
+				}
+			}
+		}
+
+		var column []string
+		for j := 0; j < len(sudokuArray[i]); j++ {
+			column = append(column, sudokuArray[j][i])
+		}
+
+		colHasOneMissingElement, rowIndex := UnitHasOneMissingElement(column)
+		if colHasOneMissingElement {
+			for _, elem := range []string{"1", "2", "3", "4", "5", "6", "7", "8", "9"} {
+				if !contains(sudokuArray[i], elem) {
+					sudokuArray[rowIndex][i] = elem
 				}
 			}
 		}
