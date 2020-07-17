@@ -6,41 +6,19 @@ func SolveGrid(grid *sudokuGrid) {
 			blockValue := (*grid)[row][col].GetBlockValue()
 
 			if blockValue != " " {
-				// update blocks in row
-				updateRow(grid, row, blockValue)
-
-				// update blocks in col
-				updateCol(grid, col, blockValue)
-
+				updateUnit(grid.getRow(row), blockValue)
+				updateUnit(grid.getColumn(col), blockValue)
 				// update blocks in square
 			}
 		}
 	}
 }
 
-func updateRow(grid *sudokuGrid, row int, value string) {
-	for idx := range (*grid)[row] {
-		if (*grid)[row][idx].GetBlockValue() == " " {
-			for _, val := range (*grid)[row][idx].possibleValues {
-				if val == value {
-					(*grid)[row][idx].excludePossibleValue(val)
-					break
-				}
-			}
-		}
-	}
-}
-
-func updateCol(grid *sudokuGrid, col int, value string) {
-	var column []*sudokuBlock
-	for row := 0; row < len(*grid); row++ {
-		column = append(column, &(*grid)[row][col])
-	}
-
-	for _, block := range column {
+func updateUnit(unit []*sudokuBlock, value string) {
+	for _, block := range unit {
 		if block.GetBlockValue() == " " {
 			for _, val := range block.possibleValues {
-				if val != value {
+				if val == value {
 					block.excludePossibleValue(val)
 					break
 				}

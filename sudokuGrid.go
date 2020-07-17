@@ -51,3 +51,21 @@ func (i *sudokuGrid) Set(value string) error {
 	}
 	return nil
 }
+
+func (i *sudokuGrid) getRow(row int) []*sudokuBlock {
+	var blocks []*sudokuBlock
+	for col := 0; col < len(*i); col++ {
+		blocks = append(blocks, &(*i)[row][col])
+	}
+
+	return blocks
+}
+
+func (i *sudokuGrid) getColumn(col int) []*sudokuBlock {
+	var blocks []*sudokuBlock
+	for row := 0; row < len(*i); row++ {
+		blocks = append(blocks, &(*i)[row][col])
+	}
+
+	return blocks
+}
