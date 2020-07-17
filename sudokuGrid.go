@@ -69,3 +69,16 @@ func (i *sudokuGrid) getColumn(col int) []*sudokuBlock {
 
 	return blocks
 }
+
+func (i *sudokuGrid) countBlocksSolved() int {
+	num := 0
+	for _, row := range *i {
+		for _, block := range row {
+			if block.GetBlockValue() != " " {
+				num += 1
+			}
+		}
+	}
+
+	return num
+}

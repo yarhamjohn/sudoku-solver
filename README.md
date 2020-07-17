@@ -1,4 +1,4 @@
-A Sudoko solver implemented in Golang
+A Sudoku solver implemented in Golang
 
 This is a command line application that takes a single parameter:
 
