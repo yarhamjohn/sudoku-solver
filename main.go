@@ -4,15 +4,38 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"strconv"
 	"strings"
 )
 
-// Set up a type to handle the 2-d sudoku grid
-type sudokuArray [][]string
+var possibleBlockValues = []string{"1", "2", "3", "4", "5", "6", "7", "8", "9"}
 
-// Method for generating a string representation of the sudokuArray type
-func (i *sudokuArray) String() string {
-	var grid []string
+// Set up a types to handle the 2-d sudoku grid
+type sudokuBlock struct {
+	possibleValues []string
+}
+
+func (i *sudokuBlock) GetBlockValue() string {
+	if len(i.possibleValues) == 1 {
+		return i.possibleValues[0]
+	}
+
+	return " "
+}
+
+func getBlockFromString(value string) sudokuBlock {
+	if value == " " {
+		return sudokuBlock{possibleValues: possibleBlockValues}
+	}
+
+	return sudokuBlock{possibleValues: []string{value}}
+}
+
+type sudokuGrid [][]sudokuBlock
+
+// Method for generating a string representation of the sudokuGrid type
+func (i *sudokuGrid) String() string {
+	var gridToPrint []string
 
 	for row := 0; row < len(*i); row++ {
 		var rowToPrint []string
@@ -21,21 +44,21 @@ func (i *sudokuArray) String() string {
 			if col > 0 && col%3 == 0 {
 				rowToPrint = append(rowToPrint, "|")
 			}
-			rowToPrint = append(rowToPrint, (*i)[row][col])
+			rowToPrint = append(rowToPrint, (*i)[row][col].GetBlockValue())
 		}
 
 		if row > 0 && row%3 == 0 {
-			grid = append(grid, "---------------------\n")
+			gridToPrint = append(gridToPrint, "---------------------\n")
 		}
 
-		grid = append(grid, strings.Join(rowToPrint, " "), "\n")
+		gridToPrint = append(gridToPrint, strings.Join(rowToPrint, " "), "\n")
 	}
 
-	return strings.Join(grid, "")
+	return strings.Join(gridToPrint, "")
 }
 
-// Method for parsing a string into a sudokuArray type
-func (i *sudokuArray) Set(value string) error {
+// Method for parsing a string into a sudokuGrid type
+func (i *sudokuGrid) Set(value string) error {
 	fullArray := strings.Split(value, ",")
 
 	if len(fullArray) != 81 {
@@ -45,60 +68,65 @@ func (i *sudokuArray) Set(value string) error {
 	for row := 0; row < len(fullArray); row += 9 {
 		end := row + 9
 
-		*i = append(*i, fullArray[row:end])
+		var sudokuBlockRow []sudokuBlock
+		for _, e := range fullArray[row:end] {
+			sudokuBlockRow = append(sudokuBlockRow, getBlockFromString(e))
+		}
+
+		*i = append(*i, sudokuBlockRow)
 	}
 	return nil
 }
 
-var sudokuInput sudokuArray
+var input sudokuGrid
 
 func main() {
-	flag.Var(&sudokuInput, "grid", "Sudoku grid ")
-	flag.Parse() // Calls the Set() method on the sudokuInput
+	flag.Var(&input, "grid", "Sudoku grid ")
+	flag.Parse() // Calls the Set() method on the input
 
 	fmt.Println("Input grid:")
-	fmt.Println(sudokuInput.String())
+	fmt.Println(input.String())
 
-	for !GridIsComplete(sudokuInput) {
-		SolveGrid(sudokuInput)
+	for !GridIsComplete(input) {
+		SolveGrid(input)
 	}
 
 	fmt.Println("The grid has been solved!")
-	fmt.Println(sudokuInput.String())
+	fmt.Println(input.String())
 }
 
-func SolveGrid(sudokuArray sudokuArray) {
-	for i := 0; i < len(sudokuArray); i++ {
-		rowHasOneMissingElement, colIndex := UnitHasOneMissingElement(sudokuArray[i])
+func SolveGrid(sudokuGrid sudokuGrid) {
+	for i := 0; i < len(sudokuGrid); i++ {
+		rowHasOneMissingElement, colIndex := UnitHasOneMissingElement(sudokuGrid[i])
 		if rowHasOneMissingElement {
-			for _, elem := range []string{"1", "2", "3", "4", "5", "6", "7", "8", "9"} {
-				if !contains(sudokuArray[i], elem) {
-					sudokuArray[i][colIndex] = elem
+			for _, value := range possibleBlockValues {
+				if !sudokuBlocksContain(sudokuGrid[i], value) {
+					sudokuGrid[i][colIndex] = sudokuBlock{possibleValues: []string{value}}
 				}
 			}
 		}
 
-		var column []string
-		for j := 0; j < len(sudokuArray[i]); j++ {
-			column = append(column, sudokuArray[j][i])
+		var column []sudokuBlock
+		for j := 0; j < len(sudokuGrid[i]); j++ {
+			column = append(column, sudokuGrid[j][i])
 		}
 
 		colHasOneMissingElement, rowIndex := UnitHasOneMissingElement(column)
 		if colHasOneMissingElement {
-			for _, elem := range []string{"1", "2", "3", "4", "5", "6", "7", "8", "9"} {
-				if !contains(sudokuArray[i], elem) {
-					sudokuArray[rowIndex][i] = elem
+			for _, value := range possibleBlockValues {
+				if !sudokuBlocksContain(sudokuGrid[i], value) {
+					sudokuGrid[rowIndex][i] = sudokuBlock{possibleValues: []string{value}}
 				}
 			}
 		}
 	}
 }
 
-func UnitHasOneMissingElement(unit []string) (bool, int) {
+func UnitHasOneMissingElement(blocks []sudokuBlock) (bool, int) {
 	var numEmptyElements int
 	var index int
-	for i := 0; i < len(unit); i++ {
-		if unit[i] == " " {
+	for i := 0; i < len(blocks); i++ {
+		if blocks[i].GetBlockValue() == " " {
 			numEmptyElements += 1
 			index = i
 		}
@@ -111,9 +139,9 @@ func UnitHasOneMissingElement(unit []string) (bool, int) {
 	return numEmptyElements == 1, index
 }
 
-func GridIsComplete(sudokuArray sudokuArray) bool {
-	for i := 0; i < len(sudokuArray); i++ {
-		rowIsComplete, _ := UnitIsComplete(sudokuArray[i])
+func GridIsComplete(sudokuGrid sudokuGrid) bool {
+	for i := 0; i < len(sudokuGrid); i++ {
+		rowIsComplete, _ := UnitIsComplete(sudokuGrid[i])
 
 		// If every row is complete then the grid must be complete
 		if !rowIsComplete {
@@ -124,46 +152,56 @@ func GridIsComplete(sudokuArray sudokuArray) bool {
 	return true
 }
 
-func UnitIsComplete(unit []string) (bool, error) {
-	if !SudokuUnitIsValid(unit) {
-		return false, errors.New("The unit provided is invalid: " + strings.Join(unit, ","))
+func UnitIsComplete(blocks []sudokuBlock) (bool, error) {
+	if len(blocks) != 9 {
+		return false, errors.New("an incorrect number of blocks was provided. Expected 9, got: " + strconv.Itoa(len(blocks)))
 	}
 
-	if contains(unit, " ") {
+	if !SudokuUnitIsValid(blocks) {
+		return false, errors.New("the blocks provided are an invalid set")
+	}
+
+	if sudokuBlocksContain(blocks, " ") {
 		return false, nil
 	}
 
 	return true, nil
 }
 
-func SudokuUnitIsValid(unit []string) bool {
-	if len(unit) != 9 {
-		return false
-	}
-
-	var unitSet []string
-	for _, u := range unit {
-		if u != " " {
-			if contains(unitSet, u) {
-				// the unit has a duplicate non-empty element
+func SudokuUnitIsValid(blocks []sudokuBlock) bool {
+	var uniqueBlocks []sudokuBlock
+	for _, block := range blocks {
+		blockValue := block.GetBlockValue()
+		if blockValue != " " {
+			if sudokuBlocksContain(uniqueBlocks, blockValue) {
+				// the blocks has a duplicate non-empty element
 				return false
 			}
 
-			if !contains([]string{"1", "2", "3", "4", "5", "6", "7", "8", "9"}, u) {
-				// the unit has an invalid element
+			if !isPossibleBlockValue(blockValue) {
+				// the blocks has an invalid element
 				return false
 			}
 
-			unitSet = append(unitSet, u)
+			uniqueBlocks = append(uniqueBlocks, block)
 		}
 	}
 
 	return true
 }
 
-func contains(slice []string, element string) bool {
-	for _, a := range slice {
-		if a == element {
+func sudokuBlocksContain(blocks []sudokuBlock, value string) bool {
+	for _, block := range blocks {
+		if block.GetBlockValue() == value {
+			return true
+		}
+	}
+	return false
+}
+
+func isPossibleBlockValue(value string) bool {
+	for _, blockValue := range possibleBlockValues {
+		if blockValue == value {
 			return true
 		}
 	}
