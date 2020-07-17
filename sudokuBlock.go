@@ -24,6 +24,16 @@ func (i *sudokuBlock) GetBlockValue() string {
 	return " "
 }
 
+func (i *sudokuBlock) containsPossibleValue(value string) bool {
+	for _, val := range i.possibleValues {
+		if val == value {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (i *sudokuBlock) excludePossibleValue(value string) {
 	if i.GetBlockValue() != " " {
 		return

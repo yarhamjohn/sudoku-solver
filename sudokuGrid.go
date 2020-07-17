@@ -32,6 +32,7 @@ func (i *sudokuGrid) String() string {
 }
 
 // Method for parsing a string into a sudokuGrid type
+//TODO doNT USE SPACCE (double space silently did not work)
 func (i *sudokuGrid) Set(value string) error {
 	fullArray := strings.Split(value, ",")
 
