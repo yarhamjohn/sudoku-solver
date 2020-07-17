@@ -1,8 +1,17 @@
 package main
 
+//TODO use sets?
 var possibleBlockValues = []string{"1", "2", "3", "4", "5", "6", "7", "8", "9"}
 
-// Set up a types to handle the 2-d sudoku grid
+func isPossibleValue(value string) bool {
+	for _, blockValue := range possibleBlockValues {
+		if blockValue == value {
+			return true
+		}
+	}
+	return false
+}
+
 type sudokuBlock struct {
 	possibleValues []string
 }
@@ -15,7 +24,21 @@ func (i *sudokuBlock) GetBlockValue() string {
 	return " "
 }
 
-func getBlockFromString(value string) sudokuBlock {
+func (i *sudokuBlock) excludePossibleValue(value string) {
+	if i.GetBlockValue() != " " {
+		return
+	}
+
+	var valuesToKeep []string
+	for _, val := range i.possibleValues {
+		if val != value {
+			valuesToKeep = append(valuesToKeep, val)
+		}
+	}
+	i.possibleValues = valuesToKeep
+}
+
+func createBlock(value string) sudokuBlock {
 	if value == " " {
 		return sudokuBlock{possibleValues: possibleBlockValues}
 	}
@@ -23,11 +46,14 @@ func getBlockFromString(value string) sudokuBlock {
 	return sudokuBlock{possibleValues: []string{value}}
 }
 
-func isPossibleBlockValue(value string) bool {
-	for _, blockValue := range possibleBlockValues {
-		if blockValue == value {
-			return true
+func createBlocks(values []string) []sudokuBlock {
+	var blocks []sudokuBlock
+	for _, value := range values {
+		if value == " " {
+			blocks = append(blocks, sudokuBlock{possibleValues: possibleBlockValues})
+		} else {
+			blocks = append(blocks, sudokuBlock{possibleValues: []string{value}})
 		}
 	}
-	return false
+	return blocks
 }

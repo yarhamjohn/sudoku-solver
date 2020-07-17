@@ -44,7 +44,7 @@ func (i *sudokuGrid) Set(value string) error {
 
 		var sudokuBlockRow []sudokuBlock
 		for _, e := range fullArray[row:end] {
-			sudokuBlockRow = append(sudokuBlockRow, getBlockFromString(e))
+			sudokuBlockRow = append(sudokuBlockRow, createBlock(e))
 		}
 
 		*i = append(*i, sudokuBlockRow)

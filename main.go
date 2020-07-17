@@ -14,8 +14,8 @@ func main() {
 	fmt.Println("Input grid:")
 	fmt.Println(input.String())
 
-	for !GridIsComplete(input) {
-		SolveGrid(input)
+	for !gridIsComplete(&input) {
+		SolveGrid(&input)
 	}
 
 	fmt.Println("The grid has been solved!")
