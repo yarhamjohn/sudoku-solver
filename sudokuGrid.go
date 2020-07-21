@@ -83,3 +83,36 @@ func (i *sudokuGrid) countBlocksSolved() int {
 
 	return num
 }
+
+func (i *sudokuGrid) getSquare(row int, col int) []*sudokuBlock {
+	var blocks []*sudokuBlock
+
+	// Gets the quotient only then turns it into a start row/col for the target square
+	startRow := (row / 3) * 3
+	startCol := (col / 3) * 3
+
+	for r := startRow; r < startRow+3; r++ {
+		for c := startCol; c < startCol+3; c++ {
+			blocks = append(blocks, &(*i)[r][c])
+		}
+	}
+
+	return blocks
+}
+
+func (i *sudokuGrid) getAllRelatedBlocks(row int, col int) []*sudokuBlock {
+	var blocks []*sudokuBlock
+	for _, b := range i.getRow(row) {
+		blocks = append(blocks, b)
+	}
+
+	for _, b := range i.getColumn(col) {
+		blocks = append(blocks, b)
+	}
+
+	for _, b := range i.getSquare(row, col) {
+		blocks = append(blocks, b)
+	}
+
+	return blocks
+}

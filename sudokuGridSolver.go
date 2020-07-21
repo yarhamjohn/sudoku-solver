@@ -1,40 +1,51 @@
 package main
 
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
+
 // TODO update blocks in square
 func SolveGrid(grid *sudokuGrid) {
 	for row := 0; row < len(*grid); row++ {
 		for col := 0; col < len((*grid)[row]); col++ {
 			blockValue := (*grid)[row][col].GetBlockValue()
+			fmt.Println("Row: " + strconv.Itoa(row) + "; Col: " + strconv.Itoa(col) + "; Value: " + blockValue + "; Possible Values: " + strings.Join((*grid)[row][col].possibleValues, ","))
 
-			// block is solved so update containing units
 			if blockValue != " " {
-				updateOtherBlocksInUnit(grid.getRow(row), blockValue)
-				updateOtherBlocksInUnit(grid.getColumn(col), blockValue)
-			} else {
-				updateSelf(grid.getRow(row), &(*grid)[row][col])
-				updateSelf(grid.getColumn(col), &(*grid)[row][col])
+				// current block is solved, so update blocks in the same row, col and square
+				updateBlocksInContainingUnits(grid, row, col, blockValue)
+			}
 
-				// TODO need to evaluate squares now
+			fmt.Println("Row: " + strconv.Itoa(row) + "; Col: " + strconv.Itoa(col) + "; Value: " + blockValue + "; Possible Values: " + strings.Join((*grid)[row][col].possibleValues, ","))
+		}
+	}
+
+	fmt.Println("Update related blocks: \n" + grid.String())
+
+	for row := 0; row < len(*grid); row++ {
+		for col := 0; col < len((*grid)[row]); col++ {
+			blockValue := (*grid)[row][col].GetBlockValue()
+
+			if blockValue == " " {
 				updateSelfIfOnlyBlockInUnitWithAPossibleValue(grid.getRow(row), &(*grid)[row][col])
 				updateSelfIfOnlyBlockInUnitWithAPossibleValue(grid.getColumn(col), &(*grid)[row][col])
+				updateSelfIfOnlyBlockInUnitWithAPossibleValue(grid.getSquare(row, col), &(*grid)[row][col])
 			}
 		}
 	}
+
+	fmt.Println("Update self: \n" + grid.String())
 }
 
-func updateSelf(unit []*sudokuBlock, block *sudokuBlock) {
-	for _, b := range unit {
-		if b.GetBlockValue() != " " {
-			block.excludePossibleValue(b.GetBlockValue())
-		}
-	}
-}
+func updateBlocksInContainingUnits(grid *sudokuGrid, row int, col int, blockValue string) {
+	blocksToUpdate := grid.getAllRelatedBlocks(row, col)
 
-func updateOtherBlocksInUnit(unit []*sudokuBlock, value string) {
-	for _, block := range unit {
+	for _, block := range blocksToUpdate {
 		if block.GetBlockValue() == " " {
 			for _, val := range block.possibleValues {
-				if val == value {
+				if val == blockValue {
 					block.excludePossibleValue(val)
 					break
 				}
@@ -43,12 +54,12 @@ func updateOtherBlocksInUnit(unit []*sudokuBlock, value string) {
 	}
 }
 
-func updateSelfIfOnlyBlockInUnitWithAPossibleValue(unt []*sudokuBlock, block *sudokuBlock) {
+func updateSelfIfOnlyBlockInUnitWithAPossibleValue(blocks []*sudokuBlock, block *sudokuBlock) {
 	for _, val := range block.possibleValues {
 		numOccurences := 0
 
-		for _, block := range unt {
-			if block.containsPossibleValue(val) && block.GetBlockValue() != val {
+		for _, b := range blocks {
+			if b.containsPossibleValue(val) && b.GetBlockValue() != val {
 				numOccurences += 1
 			}
 
