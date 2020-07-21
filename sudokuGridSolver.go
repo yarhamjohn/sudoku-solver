@@ -20,6 +20,8 @@ func SolveGrid(grid *sudokuGrid) {
 				updateSelfIfOnlyBlockInUnitWithAPossibleValue(grid.getRow(row), &(*grid)[row][col])
 				updateSelfIfOnlyBlockInUnitWithAPossibleValue(grid.getColumn(col), &(*grid)[row][col])
 				updateSelfIfOnlyBlockInUnitWithAPossibleValue(grid.getSquare(row, col), &(*grid)[row][col])
+
+				//TODO update others if block has two possible values and another block in the unit has the same two possible value (and 3 and 4 and 5 and 6...)
 			}
 		}
 	}
