@@ -1,28 +1,16 @@
 package main
 
-import (
-	"fmt"
-	"strconv"
-	"strings"
-)
-
-// TODO update blocks in square
 func SolveGrid(grid *sudokuGrid) {
 	for row := 0; row < len(*grid); row++ {
 		for col := 0; col < len((*grid)[row]); col++ {
 			blockValue := (*grid)[row][col].GetBlockValue()
-			fmt.Println("Row: " + strconv.Itoa(row) + "; Col: " + strconv.Itoa(col) + "; Value: " + blockValue + "; Possible Values: " + strings.Join((*grid)[row][col].possibleValues, ","))
 
 			if blockValue != " " {
 				// current block is solved, so update blocks in the same row, col and square
 				updateBlocksInContainingUnits(grid, row, col, blockValue)
 			}
-
-			fmt.Println("Row: " + strconv.Itoa(row) + "; Col: " + strconv.Itoa(col) + "; Value: " + blockValue + "; Possible Values: " + strings.Join((*grid)[row][col].possibleValues, ","))
 		}
 	}
-
-	fmt.Println("Update related blocks: \n" + grid.String())
 
 	for row := 0; row < len(*grid); row++ {
 		for col := 0; col < len((*grid)[row]); col++ {
@@ -35,8 +23,6 @@ func SolveGrid(grid *sudokuGrid) {
 			}
 		}
 	}
-
-	fmt.Println("Update self: \n" + grid.String())
 }
 
 func updateBlocksInContainingUnits(grid *sudokuGrid, row int, col int, blockValue string) {
@@ -59,7 +45,7 @@ func updateSelfIfOnlyBlockInUnitWithAPossibleValue(blocks []*sudokuBlock, block 
 		numOccurences := 0
 
 		for _, b := range blocks {
-			if b.containsPossibleValue(val) && b.GetBlockValue() != val {
+			if b.containsPossibleValue(val) {
 				numOccurences += 1
 			}
 
@@ -70,6 +56,7 @@ func updateSelfIfOnlyBlockInUnitWithAPossibleValue(blocks []*sudokuBlock, block 
 
 		if numOccurences == 1 {
 			block.possibleValues = []string{val}
+			break
 		}
 	}
 }
