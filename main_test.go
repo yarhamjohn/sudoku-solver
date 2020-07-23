@@ -96,4 +96,30 @@ func TestSudokuSolver(t *testing.T) {
 			t.Errorf("Grid should have been solved, but was not: \n" + string(output))
 		}
 	})
+
+	t.Run("SolvesExpertSudokuGrid", func(t *testing.T) {
+		input := []string{
+			"5", " ", " ", " ", " ", " ", "4", "2", " ",
+			" ", " ", " ", "6", " ", "7", " ", "1", " ",
+			" ", " ", " ", " ", " ", " ", " ", " ", "3",
+			" ", " ", "4", " ", " ", "2", " ", " ", "8",
+			" ", " ", " ", " ", "7", "9", " ", " ", " ",
+			" ", "1", " ", "5", " ", " ", " ", " ", " ",
+			" ", " ", " ", "3", "4", " ", "8", " ", " ",
+			" ", "5", "1", " ", "2", " ", " ", " ", " ",
+			" ", "7", " ", " ", " ", " ", " ", " ", "6",
+		}
+
+		cmd := exec.Command("./sudoku-solver.exe", "--grid", strings.Join(input, ","))
+
+		output, err := cmd.Output()
+		if err != nil {
+			fmt.Println(string(output))
+			t.Fatal(err)
+		}
+
+		if !strings.Contains(string(output), "The grid has been solved!") {
+			t.Errorf("Grid should have been solved, but was not: \n" + string(output))
+		}
+	})
 }
