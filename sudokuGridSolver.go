@@ -25,6 +25,11 @@ func SolveGrid(grid *sudokuGrid) {
 				updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(grid.getColumn(col), &(*grid)[row][col])
 				updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(grid.getSquare(row, col), &(*grid)[row][col])
 
+				//TODO:
+				// if two possible value both occur only in the same two blocks in a unit, those blocks can have no other possible values
+				//https://www.thonky.com/sudoku/y-wing
+				//http://www.sudokusnake.com/xwings.php
+				// could also try guessing...
 			}
 		}
 	}
