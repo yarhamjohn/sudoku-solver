@@ -21,7 +21,34 @@ func SolveGrid(grid *sudokuGrid) {
 				updateSelfIfOnlyBlockInUnitWithAPossibleValue(grid.getColumn(col), &(*grid)[row][col])
 				updateSelfIfOnlyBlockInUnitWithAPossibleValue(grid.getSquare(row, col), &(*grid)[row][col])
 
-				//TODO update others if block has two possible values and another block in the unit has the same two possible value (and 3 and 4 and 5 and 6...)
+				updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(grid.getRow(row), &(*grid)[row][col])
+				updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(grid.getColumn(col), &(*grid)[row][col])
+				updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(grid.getSquare(row, col), &(*grid)[row][col])
+
+			}
+		}
+	}
+}
+
+func updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(unit []*sudokuBlock, block *sudokuBlock) {
+	var matchingBlocks []*sudokuBlock
+	var nonMatchingBlocks []*sudokuBlock
+	for _, b := range unit {
+		if b == block {
+			matchingBlocks = append(matchingBlocks, block)
+		} else {
+			if possibleValuesAreEqual(b.possibleValues, block.possibleValues) {
+				matchingBlocks = append(matchingBlocks, b)
+			} else {
+				nonMatchingBlocks = append(nonMatchingBlocks, b)
+			}
+		}
+	}
+
+	if len(matchingBlocks) == len(block.possibleValues) {
+		for _, b := range nonMatchingBlocks {
+			for _, v := range block.possibleValues {
+				b.excludePossibleValue(v)
 			}
 		}
 	}

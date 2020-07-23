@@ -3,6 +3,19 @@ package main
 //TODO use sets?
 var possibleBlockValues = []string{"1", "2", "3", "4", "5", "6", "7", "8", "9"}
 
+func possibleValuesAreEqual(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+
+	for i, v := range a {
+		if v != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
 func isPossibleValue(value string) bool {
 	for _, blockValue := range possibleBlockValues {
 		if blockValue == value {
