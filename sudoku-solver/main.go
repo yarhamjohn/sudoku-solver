@@ -12,12 +12,12 @@ func main() {
 	flag.Var(&input, "grid", "Sudoku grid ")
 	flag.Parse() // Calls the Set() method on the input
 
-	fmt.Println("Input grid: \n" + input.String())
-
 	if input == nil {
 		fmt.Println("No input grid was provided.")
 		os.Exit(1)
 	}
+
+	fmt.Println("Input grid: \n" + input.String())
 
 	for !gridIsComplete(&input) {
 		numBlocksSolved := input.countBlocksSolved()
