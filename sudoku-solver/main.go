@@ -14,6 +14,11 @@ func main() {
 
 	fmt.Println("Input grid: \n" + input.String())
 
+	if input == nil {
+		fmt.Println("No input grid was provided.")
+		os.Exit(1)
+	}
+
 	for !gridIsComplete(&input) {
 		numBlocksSolved := input.countBlocksSolved()
 
