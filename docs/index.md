@@ -1,37 +1,39 @@
-## Welcome to GitHub Pages
+![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/yarhamjohn/sudoku-solver?style=for-the-badge)
+![Docker Stars](https://img.shields.io/docker/stars/yarhamjohn/sudoku-solver?style=for-the-badge)
+![Docker Pulls](https://img.shields.io/docker/pulls/yarhamjohn/sudoku-solver?style=for-the-badge)
 
-You can use the [editor on GitHub](https://github.com/yarhamjohn/sudoku-solver/edit/master/docs/index.md) to maintain and preview the content for your website in Markdown files.
+![Go](https://github.com/yarhamjohn/sudoku-solver/workflows/Go/badge.svg?branch=master)
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## A Sudoku solver implemented in Golang
 
-### Markdown
+This is a command line application and is published as a docker image here: https://hub.docker.com/r/yarhamjohn/sudoku-solver
+To run the program, pull the docker image and then execute:
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+`docker run sudoku-solver --grid ",,,,,,,,,3,,4,,,,5,,2,,1,,8,,2,,3,,,,,,,,,,,,4,1,6,,7,8,9,,8,,3,,,,7,,6,,,5,,7,,9,,,,,9,3,,1,2,,,,6,2,9,,8,1,4,,"`
 
-```markdown
-Syntax highlighted code block
+There is a single argument required:
 
-# Header 1
-## Header 2
-### Header 3
+`--grid`
+A comma-separated list representing the sudoku grid to be solved. The digits are ordered by row (top -> bottom) then column (left -> right). In the sample above, this corresponds to a sudoku-grid that looks like this:
 
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+```
+       |       |       
+ 3   4 |       | 5   2 
+   1   | 8   2 |   3   
+-----------------------
+       |       |       
+   4 1 | 6   7 | 8 9        
+ 8   3 |       | 7   6 
+-----------------------
+     5 |   7   | 9     
+     9 | 3   1 | 2     
+   6 2 | 9   8 | 1 4    
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+The solved sudoku-grid will be printed to the console.
 
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/yarhamjohn/sudoku-solver/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+### Future Work
+- Refactoring and general code improvements
+- Automated testing
+- Advanced solving logic as not all grids can currently be solved.
+- UI front-end
