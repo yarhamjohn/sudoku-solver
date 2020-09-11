@@ -2,6 +2,8 @@
 ![Docker Stars](https://img.shields.io/docker/stars/yarhamjohn/sudoku-solver?style=for-the-badge)
 ![Docker Pulls](https://img.shields.io/docker/pulls/yarhamjohn/sudoku-solver?style=for-the-badge)
 
+![Go](https://github.com/yarhamjohn/sudoku-solver/workflows/Go/badge.svg?branch=master)
+
 ## A Sudoku solver implemented in Golang
 
 This is a command line application and is published as a docker image here: https://hub.docker.com/r/yarhamjohn/sudoku-solver
