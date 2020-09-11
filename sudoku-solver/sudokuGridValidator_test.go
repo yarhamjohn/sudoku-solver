@@ -7,8 +7,9 @@ import (
 func TestUnitIsComplete(t *testing.T) {
 	t.Run("ReturnsTrueGivenCompleteUnit", func(t *testing.T) {
 		unitToTest := createBlocks([]string{"1", "2", "3", "4", "5", "6", "7", "8", "9"})
+		pointersToTest := GetPointers(unitToTest)
 
-		rowIsComplete, err := unitIsComplete(unitToTest)
+		rowIsComplete, err := unitIsComplete(pointersToTest)
 
 		if err != nil {
 			t.Errorf("unitIsComplete() unexpectedly failed with an error: " + err.Error())
@@ -21,8 +22,9 @@ func TestUnitIsComplete(t *testing.T) {
 
 	t.Run("ReturnsFalseGivenIncompleteUnit", func(t *testing.T) {
 		unitToTest := createBlocks([]string{"1", "2", " ", " ", " ", " ", " ", " ", " "})
+		pointersToTest := GetPointers(unitToTest)
 
-		rowIsComplete, err := unitIsComplete(unitToTest)
+		rowIsComplete, err := unitIsComplete(pointersToTest)
 
 		if err != nil {
 			t.Errorf("unitIsComplete() unexpectedly failed with an error: " + err.Error())
@@ -35,8 +37,9 @@ func TestUnitIsComplete(t *testing.T) {
 
 	t.Run("ThrowsErrorGivenIncompleteUnitWithDuplicateElements", func(t *testing.T) {
 		unitToTest := createBlocks([]string{" ", " ", "3", "3", " ", " ", " ", " ", " "})
+		pointersToTest := GetPointers(unitToTest)
 
-		_, err := unitIsComplete(unitToTest)
+		_, err := unitIsComplete(pointersToTest)
 
 		if err == nil {
 			t.Errorf("unitIsComplete() should have failed with an error but did not.")
@@ -45,8 +48,9 @@ func TestUnitIsComplete(t *testing.T) {
 
 	t.Run("ThrowsErrorGivenCompleteUnitWithDuplicateElements", func(t *testing.T) {
 		unitToTest := createBlocks([]string{"1", "2", "3", "3", "5", "6", "7", "8", "9"})
+		pointersToTest := GetPointers(unitToTest)
 
-		_, err := unitIsComplete(unitToTest)
+		_, err := unitIsComplete(pointersToTest)
 
 		if err == nil {
 			t.Errorf("unitIsComplete() should have failed with an error but did not.")
@@ -55,8 +59,9 @@ func TestUnitIsComplete(t *testing.T) {
 
 	t.Run("ThrowsErrorGivenUnitWithTooFewElements", func(t *testing.T) {
 		unitToTest := createBlocks([]string{"1"})
+		pointersToTest := GetPointers(unitToTest)
 
-		_, err := unitIsComplete(unitToTest)
+		_, err := unitIsComplete(pointersToTest)
 
 		if err == nil {
 			t.Errorf("unitIsComplete() should have failed with an error but did not.")
@@ -65,8 +70,9 @@ func TestUnitIsComplete(t *testing.T) {
 
 	t.Run("ThrowsErrorGivenUnitWithTooManyElements", func(t *testing.T) {
 		unitToTest := createBlocks([]string{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "12", "13"})
+		pointersToTest := GetPointers(unitToTest)
 
-		_, err := unitIsComplete(unitToTest)
+		_, err := unitIsComplete(pointersToTest)
 
 		if err == nil {
 			t.Errorf("unitIsComplete() should have failed with an error but did not.")
@@ -75,8 +81,9 @@ func TestUnitIsComplete(t *testing.T) {
 
 	t.Run("ThrowsErrorGivenUnitContainingInvalidNumberElement", func(t *testing.T) {
 		unitToTest := createBlocks([]string{"0", "2", "3", "4", "5", "6", "7", "8", "9"})
+		pointersToTest := GetPointers(unitToTest)
 
-		_, err := unitIsComplete(unitToTest)
+		_, err := unitIsComplete(pointersToTest)
 
 		if err == nil {
 			t.Errorf("unitIsComplete() should have failed with an error but did not.")
@@ -85,13 +92,22 @@ func TestUnitIsComplete(t *testing.T) {
 
 	t.Run("ThrowsErrorGivenUnitContainingNonNumberElement", func(t *testing.T) {
 		unitToTest := createBlocks([]string{"abc", "2", "3", "4", "5", "6", "7", "8", "9"})
+		pointersToTest := GetPointers(unitToTest)
 
-		_, err := unitIsComplete(unitToTest)
+		_, err := unitIsComplete(pointersToTest)
 
 		if err == nil {
 			t.Errorf("unitIsComplete() should have failed with an error but did not.")
 		}
 	})
+}
+
+func GetPointers(unitToTest []sudokuBlock) []*sudokuBlock {
+	var pointersToTest []*sudokuBlock
+	for i := 0; i < len(unitToTest); i++ {
+		pointersToTest = append(pointersToTest, &unitToTest[i])
+	}
+	return pointersToTest
 }
 
 func TestGridIsComplete(t *testing.T) {

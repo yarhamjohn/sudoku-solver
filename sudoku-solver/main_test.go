@@ -34,7 +34,7 @@ func TestSudokuSolver(t *testing.T) {
 			" ", "6", "2", "9", " ", "8", "1", "4", " ",
 		}
 
-		cmd := exec.Command("./sudoku-solver.exe", "--grid", strings.Join(input, ","))
+		cmd := exec.Command("./sudoku-solver", "--grid", strings.Join(input, ","))
 
 		output, err := cmd.Output()
 		if err != nil {
@@ -59,7 +59,7 @@ func TestSudokuSolver(t *testing.T) {
 			" ", " ", "8", "6", " ", " ", " ", " ", " ",
 		}
 
-		cmd := exec.Command("./sudoku-solver.exe", "--grid", strings.Join(input, ","))
+		cmd := exec.Command("./sudoku-solver", "--grid", strings.Join(input, ","))
 
 		output, err := cmd.Output()
 		if err != nil {
@@ -84,7 +84,7 @@ func TestSudokuSolver(t *testing.T) {
 			"5", " ", "4", "2", " ", "1", "3", " ", "8",
 		}
 
-		cmd := exec.Command("./sudoku-solver.exe", "--grid", strings.Join(input, ","))
+		cmd := exec.Command("./sudoku-solver", "--grid", strings.Join(input, ","))
 
 		output, err := cmd.Output()
 		if err != nil {
@@ -110,7 +110,7 @@ func TestSudokuSolver(t *testing.T) {
 			" ", "7", " ", " ", " ", " ", " ", " ", "6",
 		}
 
-		cmd := exec.Command("./sudoku-solver.exe", "--grid", strings.Join(input, ","))
+		cmd := exec.Command("./sudoku-solver", "--grid", strings.Join(input, ","))
 
 		output, err := cmd.Output()
 		if err != nil {
