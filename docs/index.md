@@ -2,13 +2,13 @@
 ![Docker Stars](https://img.shields.io/docker/stars/yarhamjohn/sudoku-solver?style=for-the-badge)
 ![Docker Pulls](https://img.shields.io/docker/pulls/yarhamjohn/sudoku-solver?style=for-the-badge)
 
-![Automated Testing](https://github.com/yarhamjohn/sudoku-solver/workflows/Go/badge.svg?branch=master)
+![Automated Testing](https://github.com/yarhamjohn/sudoku-solver/workflows/Go/badge.svg?branch=main)
 
 ## An application for solving Sudoku grids
 This is a command line application and is published as a docker image here: https://hub.docker.com/r/yarhamjohn/sudoku-solver.
 To run the program, pull the docker image and then execute:
 
-`docker run sudoku-solver --grid ",,,,,,,,,3,,4,,,,5,,2,,1,,8,,2,,3,,,,,,,,,,,,4,1,6,,7,8,9,,8,,3,,,,7,,6,,,5,,7,,9,,,,,9,3,,1,2,,,,6,2,9,,8,1,4,,"`
+`docker run sudoku-solver --grid ",,,,,,,,,3,,4,,,,5,,2,,1,,8,,2,,3,,,,,,,,,,,,4,1,6,,7,8,9,,8,,3,,,,7,,6,,,5,,7,,9,,,,,9,3,,1,2,,,,6,2,9,,8,1,4,"`
 
 A single argument is required:
 
