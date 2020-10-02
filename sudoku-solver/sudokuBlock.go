@@ -34,7 +34,7 @@ func (i *sudokuBlock) GetBlockValue() string {
 		return i.possibleValues[0]
 	}
 
-	return " "
+	return ""
 }
 
 func (i *sudokuBlock) containsPossibleValue(value string) bool {
@@ -48,7 +48,7 @@ func (i *sudokuBlock) containsPossibleValue(value string) bool {
 }
 
 func (i *sudokuBlock) excludePossibleValue(value string) {
-	if i.GetBlockValue() != " " {
+	if i.GetBlockValue() != "" {
 		return
 	}
 
@@ -62,7 +62,7 @@ func (i *sudokuBlock) excludePossibleValue(value string) {
 }
 
 func createBlock(value string) sudokuBlock {
-	if value == " " {
+	if value == "" {
 		return sudokuBlock{possibleValues: possibleBlockValues}
 	}
 
@@ -72,7 +72,7 @@ func createBlock(value string) sudokuBlock {
 func createBlocks(values []string) []sudokuBlock {
 	var blocks []sudokuBlock
 	for _, value := range values {
-		if value == " " {
+		if value == "" {
 			blocks = append(blocks, sudokuBlock{possibleValues: possibleBlockValues})
 		} else {
 			blocks = append(blocks, sudokuBlock{possibleValues: []string{value}})

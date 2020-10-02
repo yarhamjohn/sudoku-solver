@@ -18,7 +18,13 @@ func (i *sudokuGrid) String() string {
 			if col > 0 && col%3 == 0 {
 				rowToPrint = append(rowToPrint, "|")
 			}
-			rowToPrint = append(rowToPrint, (*i)[row][col].GetBlockValue())
+
+			value := (*i)[row][col].GetBlockValue()
+			if value == "" {
+				value = " "
+			}
+
+			rowToPrint = append(rowToPrint, value)
 		}
 
 		if row > 0 && row%3 == 0 {
@@ -32,7 +38,6 @@ func (i *sudokuGrid) String() string {
 }
 
 // Method for parsing a string into a sudokuGrid type
-//TODO doNT USE SPACCE (double space silently did not work)
 func (i *sudokuGrid) Set(value string) error {
 	fullArray := strings.Split(value, ",")
 
@@ -75,7 +80,7 @@ func (i *sudokuGrid) countBlocksSolved() int {
 	num := 0
 	for _, row := range *i {
 		for _, block := range row {
-			if block.GetBlockValue() != " " {
+			if block.GetBlockValue() != "" {
 				num += 1
 			}
 		}

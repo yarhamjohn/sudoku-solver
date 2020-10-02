@@ -37,7 +37,7 @@ func unitIsComplete(blocks []*sudokuBlock) (bool, error) {
 		return false, errors.New("the blocks provided are an invalid set")
 	}
 
-	if unitContains(blocks, " ") {
+	if unitContains(blocks, "") {
 		return false, nil
 	}
 
@@ -48,7 +48,7 @@ func unitIsValid(blocks []*sudokuBlock) bool {
 	var uniqueBlocks []*sudokuBlock
 	for _, block := range blocks {
 		blockValue := block.GetBlockValue()
-		if blockValue != " " {
+		if blockValue != "" {
 			if unitContains(uniqueBlocks, blockValue) {
 				// the blocks has a duplicate non-empty element
 				return false

@@ -5,7 +5,7 @@ func SolveGrid(grid *sudokuGrid) {
 		for col := 0; col < len((*grid)[row]); col++ {
 			blockValue := (*grid)[row][col].GetBlockValue()
 
-			if blockValue != " " {
+			if blockValue != "" {
 				// current block is solved, so update blocks in the same row, col and square
 				updateBlocksInContainingUnits(grid, row, col, blockValue)
 			}
@@ -16,7 +16,7 @@ func SolveGrid(grid *sudokuGrid) {
 		for col := 0; col < len((*grid)[row]); col++ {
 			blockValue := (*grid)[row][col].GetBlockValue()
 
-			if blockValue == " " {
+			if blockValue == "" {
 				updateSelfIfOnlyBlockInUnitWithAPossibleValue(grid.getRow(row), &(*grid)[row][col])
 				updateSelfIfOnlyBlockInUnitWithAPossibleValue(grid.getColumn(col), &(*grid)[row][col])
 				updateSelfIfOnlyBlockInUnitWithAPossibleValue(grid.getSquare(row, col), &(*grid)[row][col])
@@ -63,7 +63,7 @@ func updateBlocksInContainingUnits(grid *sudokuGrid, row int, col int, blockValu
 	blocksToUpdate := grid.getAllRelatedBlocks(row, col)
 
 	for _, block := range blocksToUpdate {
-		if block.GetBlockValue() == " " {
+		if block.GetBlockValue() == "" {
 			for _, val := range block.possibleValues {
 				if val == blockValue {
 					block.excludePossibleValue(val)
