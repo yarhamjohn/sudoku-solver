@@ -19,7 +19,7 @@ func TestUpdateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(t *testin
 			{possibleValues: []string{"9"}},
 		}
 
-		updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(blocksToTest, blocksToTest[0])
+		updateRelatedSquaresThatDoNotFormMiniGroupsOfMatchingPossibleValues(blocksToTest, blocksToTest[0])
 
 		if !valuesAreMatching(blocksToTest[0].possibleValues, []string{"1", "2"}) {
 			t.Errorf("Block [0] should have possible values 1,2 but had possible values " + strings.Join(blocksToTest[0].possibleValues, ","))

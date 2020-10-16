@@ -1,24 +1,28 @@
 package main
 
+import "fmt"
+
 // Solves a given sudoku grid
 func solveGrid(grid *grid) bool {
 	for !gridIsComplete(grid) {
 		numSquaresSolved := grid.countSolvedSquares()
-
-		excludeKnownValuesFromRelatedSquares(grid)
-
+		fmt.Print(grid)
 		for row := 0; row < len(*grid); row++ {
 			for col := 0; col < len((*grid)[row]); col++ {
 				value := (*grid)[row][col].getValue()
+				if value != "" {
+					// current block is solved, so update related squares
+					updateRelatedSquaresGivenKnownValue(grid, row, col, value)
+				}
 
 				if value == "" {
-					updateSelfIfOnlyBlockInUnitWithAPossibleValue(grid.getRow(row), &(*grid)[row][col])
-					updateSelfIfOnlyBlockInUnitWithAPossibleValue(grid.getColumn(col), &(*grid)[row][col])
-					updateSelfIfOnlyBlockInUnitWithAPossibleValue(grid.getBlock(row, col), &(*grid)[row][col])
+					solveSquareContainingUniquePossibleValue(grid.getRow(row), &(*grid)[row][col])
+					solveSquareContainingUniquePossibleValue(grid.getColumn(col), &(*grid)[row][col])
+					solveSquareContainingUniquePossibleValue(grid.getBlock(row, col), &(*grid)[row][col])
 
-					updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(grid.getRow(row), &(*grid)[row][col])
-					updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(grid.getColumn(col), &(*grid)[row][col])
-					updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(grid.getBlock(row, col), &(*grid)[row][col])
+					updateRelatedSquaresThatDoNotFormMiniGroupsOfMatchingPossibleValues(grid.getRow(row), &(*grid)[row][col])
+					updateRelatedSquaresThatDoNotFormMiniGroupsOfMatchingPossibleValues(grid.getColumn(col), &(*grid)[row][col])
+					updateRelatedSquaresThatDoNotFormMiniGroupsOfMatchingPossibleValues(grid.getBlock(row, col), &(*grid)[row][col])
 
 					//TODO:
 					// if two possible value both occur only in the same two blocks in a unit, those blocks can have no other possible values
@@ -38,86 +42,72 @@ func solveGrid(grid *grid) bool {
 	return true
 }
 
-// Checks every square with a known value in the grid and excludes that value from the possible values of all related squares (e.g. row, column, block)
-func excludeKnownValuesFromRelatedSquares(grid *grid) {
-	squareUpdated := false
-	for row := 0; row < len(*grid); row++ {
-		for col := 0; col < len((*grid)[row]); col++ {
-			value := (*grid)[row][col].getValue()
-
-			if value != "" {
-				// current block is solved, so update related squares
-				squareUpdated = updateRelatedSquares(grid, row, col, value)
-			}
-		}
-	}
-
-	// at least one related square got updated, so re-run
-	if squareUpdated {
-		excludeKnownValuesFromRelatedSquares(grid)
-	}
-}
-
 // Updates all related squares by excluding the given value from their possible values
-func updateRelatedSquares(grid *grid, row int, col int, value string) bool {
+func updateRelatedSquaresGivenKnownValue(grid *grid, row int, col int, value string) {
 	relatedSquares := grid.getAllRelatedSquares(row, col)
-	squareUpdated := false
 
 	for _, squares := range relatedSquares {
 		if squares.getValue() == "" {
 			for _, possibleValue := range squares.possibleValues {
 				if possibleValue == value {
 					squares.exclude(possibleValue)
-					squareUpdated = true
 					break
 				}
 			}
 		}
 	}
-
-	return squareUpdated
 }
 
-func updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(unit []*square, block *square) {
-	var matchingBlocks []*square
-	var nonMatchingBlocks []*square
-	for _, b := range unit {
-		if b == block {
-			matchingBlocks = append(matchingBlocks, block)
+// Update all squares in a slice that do not form a 'mini-group' of squares with matching possible values to exclude those values
+func updateRelatedSquaresThatDoNotFormMiniGroupsOfMatchingPossibleValues(squares []*square, targetSquare *square) {
+	matchingSquares, nonMatchingSquares := bucketMatchingSquares(squares, targetSquare)
+
+	// If the number of squares with matching possible values is the same as the number of their possible values,
+	// we know they form a 'mini-group' and that the non-matching squares cannot therefore have those possible values
+	if len(matchingSquares) == len(targetSquare.possibleValues) {
+		for _, square := range nonMatchingSquares {
+			for _, value := range targetSquare.possibleValues {
+				square.exclude(value)
+			}
+		}
+	}
+}
+
+// Determine which squares in a slice have a matching set of possible values vs a non-matching set and return buckets
+func bucketMatchingSquares(squares []*square, targetSquare *square) ([]*square, []*square) {
+	var matchingSquares []*square
+	var nonMatchingSquares []*square
+	for _, square := range squares {
+		if square == targetSquare {
+			matchingSquares = append(matchingSquares, targetSquare)
 		} else {
-			if valuesAreMatching(b.possibleValues, block.possibleValues) {
-				matchingBlocks = append(matchingBlocks, b)
+			if valuesAreMatching(square.possibleValues, targetSquare.possibleValues) {
+				matchingSquares = append(matchingSquares, square)
 			} else {
-				nonMatchingBlocks = append(nonMatchingBlocks, b)
+				nonMatchingSquares = append(nonMatchingSquares, square)
 			}
 		}
 	}
-
-	if len(matchingBlocks) == len(block.possibleValues) {
-		for _, b := range nonMatchingBlocks {
-			for _, v := range block.possibleValues {
-				b.exclude(v)
-			}
-		}
-	}
+	return matchingSquares, nonMatchingSquares
 }
 
-func updateSelfIfOnlyBlockInUnitWithAPossibleValue(blocks []*square, block *square) {
-	for _, val := range block.possibleValues {
-		numOccurences := 0
+// Solves the specified square if that square is the only square in the provided slice of squares that has a particular possible value
+func solveSquareContainingUniquePossibleValue(squares []*square, square *square) {
+	for _, value := range square.possibleValues {
+		numOccurrences := 0
 
-		for _, b := range blocks {
-			if b.isPossibleValue(val) {
-				numOccurences += 1
+		for _, b := range squares {
+			if b.isPossibleValue(value) {
+				numOccurrences += 1
 			}
 
-			if numOccurences > 1 {
+			if numOccurrences > 1 {
 				break
 			}
 		}
 
-		if numOccurences == 1 {
-			block.possibleValues = []string{val}
+		if numOccurrences == 1 {
+			square.possibleValues = []string{value}
 			break
 		}
 	}
