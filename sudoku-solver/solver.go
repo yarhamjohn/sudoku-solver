@@ -1,16 +1,8 @@
 package main
 
-func SolveGrid(grid *grid) {
-	for row := 0; row < len(*grid); row++ {
-		for col := 0; col < len((*grid)[row]); col++ {
-			blockValue := (*grid)[row][col].getValue()
-
-			if blockValue != "" {
-				// current block is solved, so update blocks in the same row, col and square
-				updateBlocksInContainingUnits(grid, row, col, blockValue)
-			}
-		}
-	}
+// Solves a given sudoku grid
+func solveGrid(grid *grid) {
+	excludeKnownValuesFromRelatedSquares(grid)
 
 	for row := 0; row < len(*grid); row++ {
 		for col := 0; col < len((*grid)[row]); col++ {
@@ -35,6 +27,46 @@ func SolveGrid(grid *grid) {
 	}
 }
 
+// Checks every square with a known value in the grid and excludes that value from the possible values of all related squares (e.g. row, column, block)
+func excludeKnownValuesFromRelatedSquares(grid *grid) {
+	squareUpdated := false
+	for row := 0; row < len(*grid); row++ {
+		for col := 0; col < len((*grid)[row]); col++ {
+			value := (*grid)[row][col].getValue()
+
+			if value != "" {
+				// current block is solved, so update related squares
+				squareUpdated = updateRelatedSquares(grid, row, col, value)
+			}
+		}
+	}
+
+	// at least one related square got updated, so re-run
+	if squareUpdated {
+		excludeKnownValuesFromRelatedSquares(grid)
+	}
+}
+
+// Updates all related squares by excluding the given value from their possible values
+func updateRelatedSquares(grid *grid, row int, col int, value string) bool {
+	relatedSquares := grid.getAllRelatedSquares(row, col)
+	squareUpdated := false
+
+	for _, squares := range relatedSquares {
+		if squares.getValue() == "" {
+			for _, possibleValue := range squares.possibleValues {
+				if possibleValue == value {
+					squares.exclude(possibleValue)
+					squareUpdated = true
+					break
+				}
+			}
+		}
+	}
+
+	return squareUpdated
+}
+
 func updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(unit []*square, block *square) {
 	var matchingBlocks []*square
 	var nonMatchingBlocks []*square
@@ -54,21 +86,6 @@ func updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(unit []*squar
 		for _, b := range nonMatchingBlocks {
 			for _, v := range block.possibleValues {
 				b.exclude(v)
-			}
-		}
-	}
-}
-
-func updateBlocksInContainingUnits(grid *grid, row int, col int, blockValue string) {
-	blocksToUpdate := grid.getAllRelatedSquares(row, col)
-
-	for _, block := range blocksToUpdate {
-		if block.getValue() == "" {
-			for _, val := range block.possibleValues {
-				if val == blockValue {
-					block.exclude(val)
-					break
-				}
 			}
 		}
 	}

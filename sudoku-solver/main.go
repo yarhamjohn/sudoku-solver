@@ -22,7 +22,7 @@ func main() {
 	for !gridIsComplete(&input) {
 		numBlocksSolved := input.countSolvedSquares()
 
-		SolveGrid(&input)
+		solveGrid(&input)
 
 		if numBlocksSolved == input.countSolvedSquares() {
 			fmt.Println("This grid cannot currently be solved. Current status: \n" + input.String())

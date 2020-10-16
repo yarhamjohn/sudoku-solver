@@ -49,7 +49,7 @@ func TestSolveGrid(t *testing.T) {
 			createSquares([]string{"3", "4", "5", "2", "8", "6", "1", "7", "9"}),
 		}
 
-		SolveGrid(&gridToTest)
+		solveGrid(&gridToTest)
 
 		if gridToTest[0][0].getValue() != "5" {
 			t.Errorf("Block [0][0] should have value 5 but had value " + gridToTest[0][0].getValue())
@@ -73,7 +73,7 @@ func TestSolveGrid(t *testing.T) {
 			createSquares([]string{"3", "4", "5", "2", "8", "6", "1", "7", "9"}),
 		}
 
-		SolveGrid(&gridToTest)
+		solveGrid(&gridToTest)
 
 		if gridToTest[0][0].getValue() != "5" {
 			t.Errorf("Block [0][0] should have value 5 but had value " + gridToTest[0][0].getValue())
@@ -101,7 +101,7 @@ func TestSolveGrid(t *testing.T) {
 			createSquares([]string{"3", "4", "5", "2", "8", "6", "1", "7", "9"}),
 		}
 
-		SolveGrid(&gridToTest)
+		solveGrid(&gridToTest)
 
 		if gridToTest[0][0].getValue() != "5" {
 			t.Errorf("Block [0][0] should have value 5 but had value " + gridToTest[0][0].getValue())
@@ -129,7 +129,7 @@ func TestSolveGrid(t *testing.T) {
 			createSquares([]string{"3", "4", "5", "2", "8", "6", "1", "7", "9"}),
 		}
 
-		SolveGrid(&gridToTest)
+		solveGrid(&gridToTest)
 
 		if gridToTest[0][0].getValue() != "5" {
 			t.Errorf("Block [0][0] should have value 5 but had value " + gridToTest[0][0].getValue())
@@ -157,7 +157,7 @@ func TestSolveGrid(t *testing.T) {
 			createSquares([]string{"3", "4", "5", "2", "8", "6", "1", "7", "9"}),
 		}
 
-		SolveGrid(&gridToTest)
+		solveGrid(&gridToTest)
 
 		if gridToTest[0][0].getValue() != "5" {
 			t.Errorf("Block [0][0] should have value 5 but had value " + gridToTest[0][0].getValue())
@@ -185,7 +185,7 @@ func TestSolveGrid(t *testing.T) {
 			createSquares([]string{"3", "4", "5", "2", "8", "6", "1", "7", "9"}),
 		}
 
-		SolveGrid(&gridToTest)
+		solveGrid(&gridToTest)
 
 		if gridToTest[0][0].getValue() != "5" {
 			t.Errorf("Block [0][0] should have value 5 but had value " + gridToTest[0][0].getValue())
@@ -221,7 +221,7 @@ func TestSolveGrid(t *testing.T) {
 			createSquares([]string{"3", "4", "5", "2", "8", "6", "1", "7", "9"}),
 		}
 
-		SolveGrid(&gridToTest)
+		solveGrid(&gridToTest)
 
 		if gridToTest[0][0].getValue() != "5" {
 			t.Errorf("Block [0][0] should have value 5 but had value " + gridToTest[0][0].getValue())
@@ -257,7 +257,7 @@ func TestSolveGrid(t *testing.T) {
 			createSquares([]string{"3", "4", "5", "2", "8", "6", "1", "7", "9"}),
 		}
 
-		SolveGrid(&gridToTest)
+		solveGrid(&gridToTest)
 
 		if gridToTest[0][0].getValue() != "5" {
 			t.Errorf("Block [0][0] should have value 5 but had value " + gridToTest[0][0].getValue())
@@ -293,7 +293,7 @@ func TestSolveGrid(t *testing.T) {
 			createSquares([]string{"3", "4", "5", "2", "8", "6", "1", "7", "9"}),
 		}
 
-		SolveGrid(&gridToTest)
+		solveGrid(&gridToTest)
 
 		if gridToTest[0][0].getValue() != "5" {
 			t.Errorf("Block [0][0] should have value 5 but had value " + gridToTest[0][0].getValue())
@@ -337,7 +337,7 @@ func TestSolveGrid(t *testing.T) {
 			createSquares([]string{"3", "4", "5", "2", "8", "6", "1", "7", "9"}),
 		}
 
-		SolveGrid(&gridToTest)
+		solveGrid(&gridToTest)
 
 		if gridToTest[0][0].getValue() != "5" {
 			t.Errorf("Block [0][0] should have value 5 but had value " + gridToTest[0][0].getValue())
