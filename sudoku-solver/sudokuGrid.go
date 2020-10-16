@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-type sudokuGrid [][]sudokuBlock
+type sudokuGrid [][]square
 
 // Method for generating a string representation of the sudokuGrid type
 func (i *sudokuGrid) String() string {
@@ -19,7 +19,7 @@ func (i *sudokuGrid) String() string {
 				rowToPrint = append(rowToPrint, "|")
 			}
 
-			value := (*i)[row][col].GetBlockValue()
+			value := (*i)[row][col].getValue()
 			if value == "" {
 				value = " "
 			}
@@ -48,9 +48,9 @@ func (i *sudokuGrid) Set(value string) error {
 	for row := 0; row < len(fullArray); row += 9 {
 		end := row + 9
 
-		var sudokuBlockRow []sudokuBlock
+		var sudokuBlockRow []square
 		for _, e := range fullArray[row:end] {
-			sudokuBlockRow = append(sudokuBlockRow, createBlock(e))
+			sudokuBlockRow = append(sudokuBlockRow, createSquare(e))
 		}
 
 		*i = append(*i, sudokuBlockRow)
@@ -58,8 +58,8 @@ func (i *sudokuGrid) Set(value string) error {
 	return nil
 }
 
-func (i *sudokuGrid) getRow(row int) []*sudokuBlock {
-	var blocks []*sudokuBlock
+func (i *sudokuGrid) getRow(row int) []*square {
+	var blocks []*square
 	for col := 0; col < len(*i); col++ {
 		blocks = append(blocks, &(*i)[row][col])
 	}
@@ -67,8 +67,8 @@ func (i *sudokuGrid) getRow(row int) []*sudokuBlock {
 	return blocks
 }
 
-func (i *sudokuGrid) getColumn(col int) []*sudokuBlock {
-	var blocks []*sudokuBlock
+func (i *sudokuGrid) getColumn(col int) []*square {
+	var blocks []*square
 	for row := 0; row < len(*i); row++ {
 		blocks = append(blocks, &(*i)[row][col])
 	}
@@ -80,7 +80,7 @@ func (i *sudokuGrid) countBlocksSolved() int {
 	num := 0
 	for _, row := range *i {
 		for _, block := range row {
-			if block.GetBlockValue() != "" {
+			if block.getValue() != "" {
 				num += 1
 			}
 		}
@@ -89,8 +89,8 @@ func (i *sudokuGrid) countBlocksSolved() int {
 	return num
 }
 
-func (i *sudokuGrid) getSquare(row int, col int) []*sudokuBlock {
-	var blocks []*sudokuBlock
+func (i *sudokuGrid) getSquare(row int, col int) []*square {
+	var blocks []*square
 
 	// Gets the quotient only then turns it into a start row/col for the target square
 	startRow := (row / 3) * 3
@@ -105,8 +105,8 @@ func (i *sudokuGrid) getSquare(row int, col int) []*sudokuBlock {
 	return blocks
 }
 
-func (i *sudokuGrid) getAllRelatedBlocks(row int, col int) []*sudokuBlock {
-	var blocks []*sudokuBlock
+func (i *sudokuGrid) getAllRelatedBlocks(row int, col int) []*square {
+	var blocks []*square
 	for _, b := range i.getRow(row) {
 		blocks = append(blocks, b)
 	}

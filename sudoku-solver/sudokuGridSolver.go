@@ -3,7 +3,7 @@ package main
 func SolveGrid(grid *sudokuGrid) {
 	for row := 0; row < len(*grid); row++ {
 		for col := 0; col < len((*grid)[row]); col++ {
-			blockValue := (*grid)[row][col].GetBlockValue()
+			blockValue := (*grid)[row][col].getValue()
 
 			if blockValue != "" {
 				// current block is solved, so update blocks in the same row, col and square
@@ -14,7 +14,7 @@ func SolveGrid(grid *sudokuGrid) {
 
 	for row := 0; row < len(*grid); row++ {
 		for col := 0; col < len((*grid)[row]); col++ {
-			blockValue := (*grid)[row][col].GetBlockValue()
+			blockValue := (*grid)[row][col].getValue()
 
 			if blockValue == "" {
 				updateSelfIfOnlyBlockInUnitWithAPossibleValue(grid.getRow(row), &(*grid)[row][col])
@@ -35,14 +35,14 @@ func SolveGrid(grid *sudokuGrid) {
 	}
 }
 
-func updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(unit []*sudokuBlock, block *sudokuBlock) {
-	var matchingBlocks []*sudokuBlock
-	var nonMatchingBlocks []*sudokuBlock
+func updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(unit []*square, block *square) {
+	var matchingBlocks []*square
+	var nonMatchingBlocks []*square
 	for _, b := range unit {
 		if b == block {
 			matchingBlocks = append(matchingBlocks, block)
 		} else {
-			if possibleValuesAreEqual(b.possibleValues, block.possibleValues) {
+			if valuesAreMatching(b.possibleValues, block.possibleValues) {
 				matchingBlocks = append(matchingBlocks, b)
 			} else {
 				nonMatchingBlocks = append(nonMatchingBlocks, b)
@@ -53,7 +53,7 @@ func updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(unit []*sudok
 	if len(matchingBlocks) == len(block.possibleValues) {
 		for _, b := range nonMatchingBlocks {
 			for _, v := range block.possibleValues {
-				b.excludePossibleValue(v)
+				b.exclude(v)
 			}
 		}
 	}
@@ -63,10 +63,10 @@ func updateBlocksInContainingUnits(grid *sudokuGrid, row int, col int, blockValu
 	blocksToUpdate := grid.getAllRelatedBlocks(row, col)
 
 	for _, block := range blocksToUpdate {
-		if block.GetBlockValue() == "" {
+		if block.getValue() == "" {
 			for _, val := range block.possibleValues {
 				if val == blockValue {
-					block.excludePossibleValue(val)
+					block.exclude(val)
 					break
 				}
 			}
@@ -74,12 +74,12 @@ func updateBlocksInContainingUnits(grid *sudokuGrid, row int, col int, blockValu
 	}
 }
 
-func updateSelfIfOnlyBlockInUnitWithAPossibleValue(blocks []*sudokuBlock, block *sudokuBlock) {
+func updateSelfIfOnlyBlockInUnitWithAPossibleValue(blocks []*square, block *square) {
 	for _, val := range block.possibleValues {
 		numOccurences := 0
 
 		for _, b := range blocks {
-			if b.containsPossibleValue(val) {
+			if b.isPossibleValue(val) {
 				numOccurences += 1
 			}
 

@@ -28,7 +28,7 @@ func gridIsComplete(sudokuGrid *sudokuGrid) bool {
 	return true
 }
 
-func unitIsComplete(blocks []*sudokuBlock) (bool, error) {
+func unitIsComplete(blocks []*square) (bool, error) {
 	if len(blocks) != 9 {
 		return false, errors.New("an incorrect number of blocks was provided. Expected 9, got: " + strconv.Itoa(len(blocks)))
 	}
@@ -44,17 +44,17 @@ func unitIsComplete(blocks []*sudokuBlock) (bool, error) {
 	return true, nil
 }
 
-func unitIsValid(blocks []*sudokuBlock) bool {
-	var uniqueBlocks []*sudokuBlock
+func unitIsValid(blocks []*square) bool {
+	var uniqueBlocks []*square
 	for _, block := range blocks {
-		blockValue := block.GetBlockValue()
+		blockValue := block.getValue()
 		if blockValue != "" {
 			if unitContains(uniqueBlocks, blockValue) {
 				// the blocks has a duplicate non-empty element
 				return false
 			}
 
-			if !isPossibleValue(blockValue) {
+			if !isValidValue(blockValue) {
 				// the blocks has an invalid element
 				return false
 			}
@@ -66,9 +66,9 @@ func unitIsValid(blocks []*sudokuBlock) bool {
 	return true
 }
 
-func unitContains(blocks []*sudokuBlock, value string) bool {
+func unitContains(blocks []*square, value string) bool {
 	for _, block := range blocks {
-		if block.GetBlockValue() == value {
+		if block.getValue() == value {
 			return true
 		}
 	}
