@@ -19,15 +19,9 @@ func main() {
 
 	fmt.Println("Input grid: \n" + input.String())
 
-	for !gridIsComplete(&input) {
-		numBlocksSolved := input.countSolvedSquares()
-
-		solveGrid(&input)
-
-		if numBlocksSolved == input.countSolvedSquares() {
-			fmt.Println("This grid cannot currently be solved. Current status: \n" + input.String())
-			os.Exit(1)
-		}
+	if !solveGrid(&input) {
+		fmt.Println("This grid cannot currently be solved. Current status: \n" + input.String())
+		os.Exit(1)
 	}
 
 	fmt.Println("The grid has been solved! \n" + input.String())

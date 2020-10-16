@@ -1,30 +1,41 @@
 package main
 
 // Solves a given sudoku grid
-func solveGrid(grid *grid) {
-	excludeKnownValuesFromRelatedSquares(grid)
+func solveGrid(grid *grid) bool {
+	for !gridIsComplete(grid) {
+		numSquaresSolved := grid.countSolvedSquares()
 
-	for row := 0; row < len(*grid); row++ {
-		for col := 0; col < len((*grid)[row]); col++ {
-			blockValue := (*grid)[row][col].getValue()
+		excludeKnownValuesFromRelatedSquares(grid)
 
-			if blockValue == "" {
-				updateSelfIfOnlyBlockInUnitWithAPossibleValue(grid.getRow(row), &(*grid)[row][col])
-				updateSelfIfOnlyBlockInUnitWithAPossibleValue(grid.getColumn(col), &(*grid)[row][col])
-				updateSelfIfOnlyBlockInUnitWithAPossibleValue(grid.getBlock(row, col), &(*grid)[row][col])
+		for row := 0; row < len(*grid); row++ {
+			for col := 0; col < len((*grid)[row]); col++ {
+				value := (*grid)[row][col].getValue()
 
-				updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(grid.getRow(row), &(*grid)[row][col])
-				updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(grid.getColumn(col), &(*grid)[row][col])
-				updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(grid.getBlock(row, col), &(*grid)[row][col])
+				if value == "" {
+					updateSelfIfOnlyBlockInUnitWithAPossibleValue(grid.getRow(row), &(*grid)[row][col])
+					updateSelfIfOnlyBlockInUnitWithAPossibleValue(grid.getColumn(col), &(*grid)[row][col])
+					updateSelfIfOnlyBlockInUnitWithAPossibleValue(grid.getBlock(row, col), &(*grid)[row][col])
 
-				//TODO:
-				// if two possible value both occur only in the same two blocks in a unit, those blocks can have no other possible values
-				//https://www.thonky.com/sudoku/y-wing
-				//http://www.sudokusnake.com/xwings.php
-				// could also try guessing...
+					updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(grid.getRow(row), &(*grid)[row][col])
+					updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(grid.getColumn(col), &(*grid)[row][col])
+					updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(grid.getBlock(row, col), &(*grid)[row][col])
+
+					//TODO:
+					// if two possible value both occur only in the same two blocks in a unit, those blocks can have no other possible values
+					//https://www.thonky.com/sudoku/y-wing
+					//http://www.sudokusnake.com/xwings.php
+					// could also try guessing...
+				}
 			}
 		}
+
+		// No further squares have been solved, so the grid cannot be solved
+		if numSquaresSolved == grid.countSolvedSquares() {
+			return false
+		}
 	}
+
+	return true
 }
 
 // Checks every square with a known value in the grid and excludes that value from the possible values of all related squares (e.g. row, column, block)
