@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	var input sudokuGrid
+	var input grid
 
 	flag.Var(&input, "grid", "Sudoku grid ")
 	flag.Parse() // Calls the Set() method on the input
@@ -20,11 +20,11 @@ func main() {
 	fmt.Println("Input grid: \n" + input.String())
 
 	for !gridIsComplete(&input) {
-		numBlocksSolved := input.countBlocksSolved()
+		numBlocksSolved := input.countSolvedSquares()
 
 		SolveGrid(&input)
 
-		if numBlocksSolved == input.countBlocksSolved() {
+		if numBlocksSolved == input.countSolvedSquares() {
 			fmt.Println("This grid cannot currently be solved. Current status: \n" + input.String())
 			os.Exit(1)
 		}

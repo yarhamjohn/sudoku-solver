@@ -1,6 +1,6 @@
 package main
 
-func SolveGrid(grid *sudokuGrid) {
+func SolveGrid(grid *grid) {
 	for row := 0; row < len(*grid); row++ {
 		for col := 0; col < len((*grid)[row]); col++ {
 			blockValue := (*grid)[row][col].getValue()
@@ -19,11 +19,11 @@ func SolveGrid(grid *sudokuGrid) {
 			if blockValue == "" {
 				updateSelfIfOnlyBlockInUnitWithAPossibleValue(grid.getRow(row), &(*grid)[row][col])
 				updateSelfIfOnlyBlockInUnitWithAPossibleValue(grid.getColumn(col), &(*grid)[row][col])
-				updateSelfIfOnlyBlockInUnitWithAPossibleValue(grid.getSquare(row, col), &(*grid)[row][col])
+				updateSelfIfOnlyBlockInUnitWithAPossibleValue(grid.getBlock(row, col), &(*grid)[row][col])
 
 				updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(grid.getRow(row), &(*grid)[row][col])
 				updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(grid.getColumn(col), &(*grid)[row][col])
-				updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(grid.getSquare(row, col), &(*grid)[row][col])
+				updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(grid.getBlock(row, col), &(*grid)[row][col])
 
 				//TODO:
 				// if two possible value both occur only in the same two blocks in a unit, those blocks can have no other possible values
@@ -59,8 +59,8 @@ func updateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(unit []*squar
 	}
 }
 
-func updateBlocksInContainingUnits(grid *sudokuGrid, row int, col int, blockValue string) {
-	blocksToUpdate := grid.getAllRelatedBlocks(row, col)
+func updateBlocksInContainingUnits(grid *grid, row int, col int, blockValue string) {
+	blocksToUpdate := grid.getAllRelatedSquares(row, col)
 
 	for _, block := range blocksToUpdate {
 		if block.getValue() == "" {

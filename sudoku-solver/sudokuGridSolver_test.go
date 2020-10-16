@@ -37,7 +37,7 @@ func TestUpdateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(t *testin
 
 func TestSolveGrid(t *testing.T) {
 	t.Run("CompletesGridWith_OneEmptyBlock", func(t *testing.T) {
-		gridToTest := sudokuGrid{
+		gridToTest := grid{
 			createSquares([]string{"", "3", "4", "6", "7", "8", "9", "1", "2"}),
 			createSquares([]string{"6", "7", "2", "1", "9", "5", "3", "4", "8"}),
 			createSquares([]string{"1", "9", "8", "3", "4", "2", "5", "6", "7"}),
@@ -61,7 +61,7 @@ func TestSolveGrid(t *testing.T) {
 	})
 
 	t.Run("CompletesGridWith_TwoEmptyBlocks_InTwoRows_InOneColumn_InOneSquare", func(t *testing.T) {
-		gridToTest := sudokuGrid{
+		gridToTest := grid{
 			createSquares([]string{"", "3", "4", "6", "7", "8", "9", "1", "2"}),
 			createSquares([]string{"", "7", "2", "1", "9", "5", "3", "4", "8"}),
 			createSquares([]string{"1", "9", "8", "3", "4", "2", "5", "6", "7"}),
@@ -89,7 +89,7 @@ func TestSolveGrid(t *testing.T) {
 	})
 
 	t.Run("CompletesGridWith_TwoEmptyBlocks_InTwoColumns_InOneRow_InOneSquare", func(t *testing.T) {
-		gridToTest := sudokuGrid{
+		gridToTest := grid{
 			createSquares([]string{"", "", "4", "6", "7", "8", "9", "1", "2"}),
 			createSquares([]string{"6", "7", "2", "1", "9", "5", "3", "4", "8"}),
 			createSquares([]string{"1", "9", "8", "3", "4", "2", "5", "6", "7"}),
@@ -117,7 +117,7 @@ func TestSolveGrid(t *testing.T) {
 	})
 
 	t.Run("CompletesGridWith_TwoEmptyBlocks_InTwoRows_InTwoColumns_InOneSquare", func(t *testing.T) {
-		gridToTest := sudokuGrid{
+		gridToTest := grid{
 			createSquares([]string{"", "3", "4", "6", "7", "8", "9", "1", "2"}),
 			createSquares([]string{"6", "", "2", "1", "9", "5", "3", "4", "8"}),
 			createSquares([]string{"1", "9", "8", "3", "4", "2", "5", "6", "7"}),
@@ -145,7 +145,7 @@ func TestSolveGrid(t *testing.T) {
 	})
 
 	t.Run("CompletesGridWith_TwoEmptyBlocks_InTwoRows_InTwoColumns_InTwoSquares", func(t *testing.T) {
-		gridToTest := sudokuGrid{
+		gridToTest := grid{
 			createSquares([]string{"", "3", "4", "6", "7", "8", "9", "1", "2"}),
 			createSquares([]string{"6", "7", "2", "", "9", "5", "3", "4", "8"}),
 			createSquares([]string{"1", "9", "8", "3", "4", "2", "5", "6", "7"}),
@@ -173,7 +173,7 @@ func TestSolveGrid(t *testing.T) {
 	})
 
 	t.Run("CompletesGridWith_FourEmptyBlocks_InTwoRows_InTwoColumns_InOneSquare", func(t *testing.T) {
-		gridToTest := sudokuGrid{
+		gridToTest := grid{
 			createSquares([]string{"", "3", "4", "", "7", "8", "9", "1", "2"}),
 			createSquares([]string{"6", "7", "2", "1", "9", "5", "3", "4", "8"}),
 			createSquares([]string{"1", "9", "8", "3", "4", "2", "5", "6", "7"}),
@@ -209,7 +209,7 @@ func TestSolveGrid(t *testing.T) {
 	})
 
 	t.Run("CompletesGridWith_FourEmptyBlocks_InTwoRows_InTwoColumns_InOneSquare", func(t *testing.T) {
-		gridToTest := sudokuGrid{
+		gridToTest := grid{
 			createSquares([]string{"", "3", "", "6", "7", "8", "9", "1", "2"}),
 			createSquares([]string{"6", "7", "2", "1", "9", "5", "3", "4", "8"}),
 			createSquares([]string{"", "9", "", "3", "4", "2", "5", "6", "7"}),
@@ -245,7 +245,7 @@ func TestSolveGrid(t *testing.T) {
 	})
 
 	t.Run("CompletesGridWith_FourEmptyBlocks_InTwoRows_InTwoColumns_InTwoSquares", func(t *testing.T) {
-		gridToTest := sudokuGrid{
+		gridToTest := grid{
 			createSquares([]string{"", "3", "4", "", "7", "8", "9", "1", "2"}),
 			createSquares([]string{"6", "7", "2", "1", "9", "5", "3", "4", "8"}),
 			createSquares([]string{"", "9", "8", "", "4", "2", "5", "6", "7"}),
@@ -281,7 +281,7 @@ func TestSolveGrid(t *testing.T) {
 	})
 
 	t.Run("CompletesGridWith_SixEmptyBlocks_InThreeRows_InTwoColumns_InOneSquare", func(t *testing.T) {
-		gridToTest := sudokuGrid{
+		gridToTest := grid{
 			createSquares([]string{"", "3", "", "6", "7", "8", "9", "1", "2"}),
 			createSquares([]string{"", "7", "", "1", "9", "5", "3", "4", "8"}),
 			createSquares([]string{"", "9", "", "3", "4", "2", "5", "6", "7"}),
@@ -325,7 +325,7 @@ func TestSolveGrid(t *testing.T) {
 	})
 
 	t.Run("CompletesGridWith_NineEmptyBlocks_InThreeRows_InThreeColumns_InOneSquare", func(t *testing.T) {
-		gridToTest := sudokuGrid{
+		gridToTest := grid{
 			createSquares([]string{"", "", "", "6", "7", "8", "9", "1", "2"}),
 			createSquares([]string{"", "", "", "1", "9", "5", "3", "4", "8"}),
 			createSquares([]string{"", "", "", "3", "4", "2", "5", "6", "7"}),

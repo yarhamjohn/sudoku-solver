@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-func gridIsComplete(sudokuGrid *sudokuGrid) bool {
+func gridIsComplete(sudokuGrid *grid) bool {
 	for i := 0; i < len(*sudokuGrid); i++ {
 		rowIsComplete, _ := unitIsComplete(sudokuGrid.getRow(i))
 		columnIsComplete, _ := unitIsComplete(sudokuGrid.getColumn(i))
@@ -17,7 +17,7 @@ func gridIsComplete(sudokuGrid *sudokuGrid) bool {
 
 	for i := 0; i < len(*sudokuGrid); i += 3 {
 		for j := 0; j < len(*sudokuGrid); j += 3 {
-			squareIsComplete, _ := unitIsComplete(sudokuGrid.getSquare(i, j))
+			squareIsComplete, _ := unitIsComplete(sudokuGrid.getBlock(i, j))
 
 			if !squareIsComplete {
 				return false

@@ -112,7 +112,7 @@ func GetPointers(unitToTest []square) []*square {
 
 func TestGridIsComplete(t *testing.T) {
 	t.Run("ReturnsTrueGivenCompleteGrid", func(t *testing.T) {
-		gridToTest := sudokuGrid{
+		gridToTest := grid{
 			createSquares([]string{"5", "3", "4", "6", "7", "8", "9", "1", "2"}),
 			createSquares([]string{"6", "7", "2", "1", "9", "5", "3", "4", "8"}),
 			createSquares([]string{"1", "9", "8", "3", "4", "2", "5", "6", "7"}),
@@ -130,7 +130,7 @@ func TestGridIsComplete(t *testing.T) {
 	})
 
 	t.Run("ReturnsFalseGivenIncompleteCompleteGrid", func(t *testing.T) {
-		gridToTest := sudokuGrid{
+		gridToTest := grid{
 			createSquares([]string{"5", "3", "4", "6", "7", "8", "9", "1", "2"}),
 			createSquares([]string{"6", "7", "2", "1", "9", "5", "3", "4", "8"}),
 			createSquares([]string{"1", "9", "8", "", "", "2", "5", "", "7"}),
