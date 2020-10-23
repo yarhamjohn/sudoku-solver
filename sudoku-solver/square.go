@@ -42,6 +42,13 @@ func (i *square) getValue() string {
 	return ""
 }
 
+// Extension method for a square which sets the possible values to a specified value
+func (i *square) setValue(value string) {
+	if isValidValue(value) {
+		i.possibleValues = []string{value}
+	}
+}
+
 // Extension method for a square which checks if a given value is still possible
 func (i *square) isPossibleValue(value string) bool {
 	for _, val := range i.possibleValues {
@@ -54,18 +61,25 @@ func (i *square) isPossibleValue(value string) bool {
 }
 
 // Extension method for a square which excludes a given value from the remaining possible values
-func (i *square) exclude(value string) {
+func (i *square) exclude(value string) bool {
 	if i.getValue() != "" {
-		return
+		return false
 	}
 
 	var valuesToKeep []string
+	valueExcluded := false
 	for _, val := range i.possibleValues {
 		if val != value {
 			valuesToKeep = append(valuesToKeep, val)
 		}
 	}
-	i.possibleValues = valuesToKeep
+
+	if len(valuesToKeep) != len(i.possibleValues) {
+		i.possibleValues = valuesToKeep
+		valueExcluded = true
+	}
+
+	return valueExcluded
 }
 
 // Creates an instance of a square with a given value

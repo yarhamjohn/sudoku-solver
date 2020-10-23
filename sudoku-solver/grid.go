@@ -83,6 +83,16 @@ func (i *grid) getRow(row int) []*square {
 	return squares
 }
 
+// Extension method on a grid that returns a list of all the rows
+func (i *grid) getRows() [][]*square {
+	var rows [][]*square
+	for j := 0; j < len(*i); j++ {
+		rows = append(rows, i.getRow(j))
+	}
+
+	return rows
+}
+
 // Extension method on a grid that returns the column containing the specified square
 func (i *grid) getColumn(col int) []*square {
 	var squares []*square
@@ -91,6 +101,16 @@ func (i *grid) getColumn(col int) []*square {
 	}
 
 	return squares
+}
+
+// Extension method on a grid that returns a list of all the columns
+func (i *grid) getColumns() [][]*square {
+	var columns [][]*square
+	for j := 0; j < len(*i); j++ {
+		columns = append(columns, i.getColumn(j))
+	}
+
+	return columns
 }
 
 // Extension method on a grid that returns the 3x3 sudoku block containing the specified square
@@ -110,6 +130,18 @@ func (i *grid) getBlock(row int, col int) []*square {
 	return squares
 }
 
+// Extension method on a grid that returns a list of all the blocks
+func (i *grid) getBlocks() [][]*square {
+	var blocks [][]*square
+	for row := 0; row < len(*i); row += 3 {
+		for column := 0; column < len(*i); column += 3 {
+			blocks = append(blocks, i.getBlock(row, column))
+		}
+	}
+
+	return blocks
+}
+
 // Extension method on a grid to get all the squares related to the specified square (e.g. same row, column or block)
 func (i *grid) getAllRelatedSquares(row int, col int) []*square {
 	var squares []*square
@@ -126,6 +158,10 @@ func (i *grid) getAllRelatedSquares(row int, col int) []*square {
 	}
 
 	return unique(squares)
+}
+
+func (i *grid) getSquare(row int, col int) *square {
+	return i.getRow(row)[col]
 }
 
 // Removes duplicate pointers from a slice of square pointers

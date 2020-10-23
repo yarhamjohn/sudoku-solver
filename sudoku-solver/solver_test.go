@@ -1,39 +1,8 @@
 package main
 
 import (
-	"strings"
 	"testing"
 )
-
-func TestUpdateUnitsContainingGroupsOfBlocksWithMatchingPossibleValues(t *testing.T) {
-	t.Run("CorrectlyUpdatesUnit", func(t *testing.T) {
-		blocksToTest := []*square{
-			{possibleValues: []string{"1", "2"}},
-			{possibleValues: []string{"1", "2"}},
-			{possibleValues: []string{"1", "2", "3"}},
-			{possibleValues: []string{"4"}},
-			{possibleValues: []string{"5"}},
-			{possibleValues: []string{"6"}},
-			{possibleValues: []string{"7"}},
-			{possibleValues: []string{"8"}},
-			{possibleValues: []string{"9"}},
-		}
-
-		updateRelatedSquaresThatDoNotFormMiniGroupsOfMatchingPossibleValues(blocksToTest, blocksToTest[0])
-
-		if !valuesAreMatching(blocksToTest[0].possibleValues, []string{"1", "2"}) {
-			t.Errorf("Block [0] should have possible values 1,2 but had possible values " + strings.Join(blocksToTest[0].possibleValues, ","))
-		}
-
-		if !valuesAreMatching(blocksToTest[1].possibleValues, []string{"1", "2"}) {
-			t.Errorf("Block [1] should have possible values 1,2 but had possible values " + strings.Join(blocksToTest[1].possibleValues, ","))
-		}
-
-		if !valuesAreMatching(blocksToTest[2].possibleValues, []string{"3"}) {
-			t.Errorf("Block [2] should have possible values 3 but had possible values " + strings.Join(blocksToTest[2].possibleValues, ","))
-		}
-	})
-}
 
 func TestSolveGrid(t *testing.T) {
 	t.Run("CompletesGridWith_OneEmptyBlock", func(t *testing.T) {
