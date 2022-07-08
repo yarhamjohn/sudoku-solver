@@ -31,9 +31,9 @@ jobs:
         fi
 
     - name: Build
-      working-directory: /home/runner/work/sudoku-solver/sudoku-solver/sudoku-solver
+      working-directory: /home/runner/work/sudoku-solver/sudoku-solver/Golang
       run: go build -v .
 
     - name: Test
-      working-directory: /home/runner/work/sudoku-solver/sudoku-solver/sudoku-solver
+      working-directory: /home/runner/work/sudoku-solver/sudoku-solver/Golang
       run: go test -v .
