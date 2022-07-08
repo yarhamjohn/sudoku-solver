@@ -5,7 +5,7 @@ FROM golang:1.12-alpine3.10
 WORKDIR /go/src/sudoku-solver
 
 # Copy the source code into the current directory
-COPY ./sudoku-solver .
+COPY ./Golang .
 
 # Get any dependencies, and compile the code
 RUN CGO_ENABLED=0 go get -v ./...
