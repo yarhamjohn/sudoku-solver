@@ -16,6 +16,12 @@ while (!GridIsComplete(startingGrid))
             if (!startingGrid[row][col].IsKnown)
             {
                 startingGrid[row][col].Increment();
+                
+                Console.WriteLine();
+                Console.WriteLine($"--------------[{row},{col}]----------------");
+                Console.WriteLine();
+                
+                PrintGrid(startingGrid);
 
                 var gridIsValid = GridIsValid(startingGrid);
 
