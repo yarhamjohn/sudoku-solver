@@ -20,9 +20,12 @@ public class Cell
     public bool IsKnown() =>
         _possibleValues.Count == 1;
 
-    public void RemovePossibleValue(int value)
+    public void RemovePossibleValues(IEnumerable<int> values)
     {
-        _possibleValues.Remove(value);
+        foreach (var value in values)
+        {
+            _possibleValues.Remove(value);
+        }
 
         if (_possibleValues.Count == 1)
         {

@@ -4,6 +4,14 @@ public static class SudokuGridSolver
 {
     public static void ApplyRules(SudokuGrid nodeGrid)
     {
+        var rows = nodeGrid.GetRows();
+        ExcludeValuesKnownInBlock(rows);
+        
+        var columns = nodeGrid.GetColumns();
+        ExcludeValuesKnownInBlock(columns);
+        
+        var squares = nodeGrid.GetSquares();
+        ExcludeValuesKnownInBlock(squares);
     }
 
     public static (int rowCount, int colCount) Solve(SudokuGrid grid)
@@ -94,4 +102,18 @@ public static class SudokuGridSolver
         return (0, 0);
     }
 
+    private static void ExcludeValuesKnownInBlock(IEnumerable<Cell[]> rows)
+    {
+        foreach (var row in rows)
+        {
+            var knownValues = row.Select(r => r.GetValue()).Where(v => v != 0).ToList();
+            foreach (var cell in row)
+            {
+                if (!cell.IsKnown())
+                {
+                    cell.RemovePossibleValues(knownValues);
+                }
+            }
+        }
+    }
 }

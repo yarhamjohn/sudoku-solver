@@ -10,15 +10,15 @@ public class SudokuGrid
     }
 
     public bool IsComplete() =>
-        GetRows()
-            .Concat(GetColumns())
-            .Concat(GetSquares())
+        GetRowBlocks()
+            .Concat(GetColumnBlocks())
+            .Concat(GetSquareBlocks())
             .All(x => x.IsComplete());
 
     public bool CanBeCompleted() =>
-        GetRows()
-            .Concat(GetColumns())
-            .Concat(GetSquares())
+        GetRowBlocks()
+            .Concat(GetColumnBlocks())
+            .Concat(GetSquareBlocks())
             .All(x => x.IsCompletable());
 
     public void Print()
@@ -28,26 +28,32 @@ public class SudokuGrid
             Console.WriteLine(string.Join(" ", row.Select(x => x.Cell.GetValue())));
         }
     }
+    
+    public IEnumerable<Cell[]> GetRows() =>
+        Grid.Select(row => row.Select(n => n.Cell).ToArray());
 
-    private IEnumerable<SudokuBlock> GetRows() =>
-        Grid.Select(row => new SudokuBlock(row.Select(n => n.Cell)));
+    private IEnumerable<SudokuBlock> GetRowBlocks() => GetRows().Select(r => new SudokuBlock(r));
 
-    private IEnumerable<SudokuBlock> GetColumns() =>
-        Enumerable.Range(0, 9).Select(x => new SudokuBlock(Grid.Select(row => row[x].Cell)));
+    public IEnumerable<Cell[]> GetColumns() =>
+        Enumerable.Range(0, 9).Select(x => Grid.Select(row => row[x].Cell).ToArray());
 
-    private IEnumerable<SudokuBlock> GetSquares()
+    private IEnumerable<SudokuBlock> GetColumnBlocks() => GetColumns().Select(c => new SudokuBlock(c));
+
+    public IEnumerable<Cell[]> GetSquares()
     {
         for (var row = 0; row < 9; row += 3)
         {
             for (var col = 0; col < 9; col += 3)
             {
-                yield return new SudokuBlock(new[]
+                yield return new[]
                 {
                     Grid[row][col].Cell, Grid[row][col + 1].Cell, Grid[row][col + 2].Cell,
                     Grid[row + 1][col].Cell, Grid[row + 1][col + 1].Cell, Grid[row + 1][col + 2].Cell,
                     Grid[row + 2][col].Cell, Grid[row + 2][col + 1].Cell, Grid[row + 2][col + 2].Cell
-                });
+                };
             }
         }
     }
+
+    private IEnumerable<SudokuBlock> GetSquareBlocks() => GetSquares().Select(s => new SudokuBlock(s));
 }
