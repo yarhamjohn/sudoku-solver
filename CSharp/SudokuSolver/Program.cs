@@ -2,13 +2,13 @@
 using SudokuSolver;
 
 // Read the input
-var inputDefinition = args[0];
+var input = args[0];
 
 var stopwatch = new Stopwatch();
 stopwatch.Start();
 
 // construct a 2D array of double-linked nodes
-var grid = new SudokuGrid(inputDefinition);
+var grid = new SudokuGrid(input);
 
 grid.Print();
 

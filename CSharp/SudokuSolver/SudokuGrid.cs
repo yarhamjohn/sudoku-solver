@@ -2,17 +2,19 @@
 
 public class SudokuGrid
 {
-    public readonly Cell[][] Grid;
+    private readonly Cell[][] _grid;
 
     public SudokuGrid(string input)
     {
-        Grid = input
+        _grid = input
             .Chunk(9)
             .Select(x => x
                 .Select(y => new Cell(Convert.ToInt32(y.ToString())))
                 .ToArray())
             .ToArray();
     }
+
+    public Cell GetCell(int row, int col) => _grid[row][col];
 
     public bool IsComplete() =>
         GetRowBlocks()
@@ -28,19 +30,19 @@ public class SudokuGrid
 
     public void Print()
     {
-        foreach (var row in Grid.Select(r => r))
+        foreach (var row in _grid.Select(r => r))
         {
             Console.WriteLine(string.Join(" ", row.Select(x => x.GetValue())));
         }
     }
     
     public IEnumerable<Cell[]> GetRows() =>
-        Grid.Select(row => row.Select(n => n).ToArray());
+        _grid.Select(row => row.Select(n => n).ToArray());
 
     private IEnumerable<SudokuBlock> GetRowBlocks() => GetRows().Select(r => new SudokuBlock(r));
 
     public IEnumerable<Cell[]> GetColumns() =>
-        Enumerable.Range(0, 9).Select(x => Grid.Select(row => row[x]).ToArray());
+        Enumerable.Range(0, 9).Select(x => _grid.Select(row => row[x]).ToArray());
 
     private IEnumerable<SudokuBlock> GetColumnBlocks() => GetColumns().Select(c => new SudokuBlock(c));
 
@@ -52,9 +54,9 @@ public class SudokuGrid
             {
                 yield return new[]
                 {
-                    Grid[row][col], Grid[row][col + 1], Grid[row][col + 2],
-                    Grid[row + 1][col], Grid[row + 1][col + 1], Grid[row + 1][col + 2],
-                    Grid[row + 2][col], Grid[row + 2][col + 1], Grid[row + 2][col + 2]
+                    _grid[row][col], _grid[row][col + 1], _grid[row][col + 2],
+                    _grid[row + 1][col], _grid[row + 1][col + 1], _grid[row + 1][col + 2],
+                    _grid[row + 2][col], _grid[row + 2][col + 1], _grid[row + 2][col + 2]
                 };
             }
         }

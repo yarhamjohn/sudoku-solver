@@ -2,15 +2,15 @@
 
 public static class SudokuGridSolver
 {
-    public static void ApplyRules(SudokuGrid nodeGrid)
+    public static void ApplyRules(SudokuGrid grid)
     {
-        var rows = nodeGrid.GetRows();
+        var rows = grid.GetRows();
         ExcludeValuesKnownInBlock(rows);
         
-        var columns = nodeGrid.GetColumns();
+        var columns = grid.GetColumns();
         ExcludeValuesKnownInBlock(columns);
         
-        var squares = nodeGrid.GetSquares();
+        var squares = grid.GetSquares();
         ExcludeValuesKnownInBlock(squares);
     }
 
@@ -19,19 +19,17 @@ public static class SudokuGridSolver
         var rowCount = 0;
         var colCount = 0;
 
-        var startingGrid = grid.Grid;
-
         while (!grid.IsComplete())
         {
-            for (var row = 0; row < startingGrid.Length; row++)
+            for (var row = 0; row < 9; row++)
             {
-                for (var col = 0; col < startingGrid.Length; col++)
+                for (var col = 0; col < 9; col++)
                 {
-                    var currentNode = startingGrid[row][col];
+                    var currentCell = grid.GetCell(row, col);
                     
-                    if (!currentNode.IsKnown())
+                    if (!currentCell.IsKnown())
                     {
-                        currentNode.Increment();
+                        currentCell.Increment();
                 
                         if (!grid.CanBeCompleted())
                         {
@@ -41,19 +39,19 @@ public static class SudokuGridSolver
                                 break;
                             }
         
-                            while (currentNode.GetValue() <= 9)
+                            while (currentCell.GetValue() <= 9)
                             {
-                                currentNode.Increment();
+                                currentCell.Increment();
                                 if (grid.CanBeCompleted())
                                 {
                                     break;
                                 }
                             }
         
-                            if (currentNode.GetValue() == 10)
+                            if (currentCell.GetValue() == 10)
                             {
-                                currentNode.Reset();
-                                var (nextRow, nextCol) = GetLastUnknownCell(startingGrid, row, col);
+                                currentCell.Reset();
+                                var (nextRow, nextCol) = GetLastUnknownCell(grid, row, col);
         
                                 row = nextRow;
                                 col = nextCol;
@@ -70,7 +68,7 @@ public static class SudokuGridSolver
         return (rowCount, colCount);
     }
     
-    private static (int nextRow, int nextCol) GetLastUnknownCell(Cell[][] grid, int row, int col)
+    private static (int nextRow, int nextCol) GetLastUnknownCell(SudokuGrid grid, int row, int col)
     {
         int startingRow;
         int startingCol;
@@ -90,7 +88,7 @@ public static class SudokuGridSolver
         {
             for (var c = startingCol; c >= 0; c--)
             {
-                if (!grid[r][c].IsKnown())
+                if (!grid.GetCell(r, c).IsKnown())
                 {
                     return (r, c - 1);
                 }
