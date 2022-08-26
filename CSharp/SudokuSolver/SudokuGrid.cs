@@ -2,9 +2,9 @@
 
 public class SudokuGrid
 {
-    public readonly Node[][] Grid;
+    public readonly Cell[][] Grid;
 
-    public SudokuGrid(Node[][] grid)
+    public SudokuGrid(Cell[][] grid)
     {
         Grid = grid;
     }
@@ -25,17 +25,17 @@ public class SudokuGrid
     {
         foreach (var row in Grid.Select(r => r))
         {
-            Console.WriteLine(string.Join(" ", row.Select(x => x.Cell.GetValue())));
+            Console.WriteLine(string.Join(" ", row.Select(x => x.GetValue())));
         }
     }
     
     public IEnumerable<Cell[]> GetRows() =>
-        Grid.Select(row => row.Select(n => n.Cell).ToArray());
+        Grid.Select(row => row.Select(n => n).ToArray());
 
     private IEnumerable<SudokuBlock> GetRowBlocks() => GetRows().Select(r => new SudokuBlock(r));
 
     public IEnumerable<Cell[]> GetColumns() =>
-        Enumerable.Range(0, 9).Select(x => Grid.Select(row => row[x].Cell).ToArray());
+        Enumerable.Range(0, 9).Select(x => Grid.Select(row => row[x]).ToArray());
 
     private IEnumerable<SudokuBlock> GetColumnBlocks() => GetColumns().Select(c => new SudokuBlock(c));
 
@@ -47,9 +47,9 @@ public class SudokuGrid
             {
                 yield return new[]
                 {
-                    Grid[row][col].Cell, Grid[row][col + 1].Cell, Grid[row][col + 2].Cell,
-                    Grid[row + 1][col].Cell, Grid[row + 1][col + 1].Cell, Grid[row + 1][col + 2].Cell,
-                    Grid[row + 2][col].Cell, Grid[row + 2][col + 1].Cell, Grid[row + 2][col + 2].Cell
+                    Grid[row][col], Grid[row][col + 1], Grid[row][col + 2],
+                    Grid[row + 1][col], Grid[row + 1][col + 1], Grid[row + 1][col + 2],
+                    Grid[row + 2][col], Grid[row + 2][col + 1], Grid[row + 2][col + 2]
                 };
             }
         }

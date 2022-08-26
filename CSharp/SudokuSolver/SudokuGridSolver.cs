@@ -29,9 +29,9 @@ public static class SudokuGridSolver
                 {
                     var currentNode = startingGrid[row][col];
                     
-                    if (!currentNode.Cell.IsKnown())
+                    if (!currentNode.IsKnown())
                     {
-                        currentNode.Cell.Increment();
+                        currentNode.Increment();
                 
                         if (!grid.CanBeCompleted())
                         {
@@ -41,18 +41,18 @@ public static class SudokuGridSolver
                                 break;
                             }
         
-                            while (currentNode.Cell.GetValue() <= 9)
+                            while (currentNode.GetValue() <= 9)
                             {
-                                currentNode.Cell.Increment();
+                                currentNode.Increment();
                                 if (grid.CanBeCompleted())
                                 {
                                     break;
                                 }
                             }
         
-                            if (currentNode.Cell.GetValue() == 10)
+                            if (currentNode.GetValue() == 10)
                             {
-                                currentNode.Cell.Reset();
+                                currentNode.Reset();
                                 var (nextRow, nextCol) = GetLastUnknownCell(startingGrid, row, col);
         
                                 row = nextRow;
@@ -70,7 +70,7 @@ public static class SudokuGridSolver
         return (rowCount, colCount);
     }
     
-    private static (int nextRow, int nextCol) GetLastUnknownCell(Node[][] grid, int row, int col)
+    private static (int nextRow, int nextCol) GetLastUnknownCell(Cell[][] grid, int row, int col)
     {
         int startingRow;
         int startingCol;
@@ -90,7 +90,7 @@ public static class SudokuGridSolver
         {
             for (var c = startingCol; c >= 0; c--)
             {
-                if (!grid[r][c].Cell.IsKnown())
+                if (!grid[r][c].IsKnown())
                 {
                     return (r, c - 1);
                 }
