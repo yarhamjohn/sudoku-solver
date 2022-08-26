@@ -2,7 +2,7 @@
 
 public class Cell
 {
-    private readonly List<int> _possibleValues;
+    private List<int> _possibleValues;
     private int _currentValue;
     
     public Cell(int input)
@@ -18,6 +18,16 @@ public class Cell
 
     public bool IsKnown() =>
         _possibleValues.Count == 1;
+
+    public bool HasPossibleValue(int value) => _possibleValues.Contains(value);
+
+    public void SetKnownValue(int value)
+    {
+        _possibleValues = new List<int> { value };
+        _currentValue = value;
+    }
+
+    public List<int> GetPossibleValues() => _possibleValues;
 
     public void RemovePossibleValues(IEnumerable<int> values)
     {

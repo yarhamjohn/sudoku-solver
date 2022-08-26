@@ -18,14 +18,39 @@ public class SudokuGridSolver
     
     public void ApplyRules()
     {
-        var rows = _grid.GetRows();
+        var rows = _grid.GetRows().ToArray();
         ExcludeValuesKnownInBlock(rows);
         
-        var columns = _grid.GetColumns();
+        var columns = _grid.GetColumns().ToArray();
         ExcludeValuesKnownInBlock(columns);
         
-        var squares = _grid.GetBoxes();
-        ExcludeValuesKnownInBlock(squares);
+        var boxes = _grid.GetBoxes().ToArray();
+        ExcludeValuesKnownInBlock(boxes);
+
+        var doWhile = true;
+        while (doWhile)
+        {
+            var rowChanged = false;
+            var colChanged = false;
+            var boxChanged = false;
+            
+            foreach (var row in rows)
+            {
+                rowChanged = ExcludeValuesOnlyPossibleInOneCell(row);
+            }
+
+            foreach (var col in columns)
+            {
+                colChanged = ExcludeValuesOnlyPossibleInOneCell(col);
+            }
+
+            foreach (var box in boxes)
+            {
+                boxChanged = ExcludeValuesOnlyPossibleInOneCell(box);
+            }
+
+            doWhile = rowChanged || colChanged || boxChanged;
+        }
     }
 
     public (int rowCount, int colCount, TimeSpan elapsedTime) GetMetrics() =>
@@ -35,55 +60,58 @@ public class SudokuGridSolver
     {
         _stopwatch.Start();
         
-        while (!_grid.IsComplete())
-        {
-            for (var row = 0; row < 9; row++)
-            {
-                for (var col = 0; col < 9; col++)
-                {
-                    var currentCell = _grid.GetCell(row, col);
-                    
-                    if (!currentCell.IsKnown())
-                    {
-                        currentCell.Increment();
-                
-                        if (!_grid.CanBeCompleted())
-                        {
-                            if (col == 0 && row == 0)
-                            {
-                                row -= 1;
-                                break;
-                            }
-        
-                            while (currentCell.GetValue() <= 9)
-                            {
-                                currentCell.Increment();
-                                if (_grid.CanBeCompleted())
-                                {
-                                    break;
-                                }
-                            }
-        
-                            if (currentCell.GetValue() == 10)
-                            {
-                                currentCell.Reset();
-                                var (nextRow, nextCol) = GetLastUnknownCell(row, col);
-        
-                                row = nextRow;
-                                col = nextCol;
-                            }
-                        }
-                    }
-                    _colCount += 1;
-                }
-        
-                _rowCount += 1;
-            }
-        }
+        DepthFirstSearch();
         
         _stopwatch.Stop();
     }
-    
+
+    private void DepthFirstSearch()
+    {
+        for (var row = 0; row < 9; row++)
+        {
+            for (var col = 0; col < 9; col++)
+            {
+                var currentCell = _grid.GetCell(row, col);
+
+                if (!currentCell.IsKnown())
+                {
+                    currentCell.Increment();
+
+                    if (!_grid.CanBeCompleted())
+                    {
+                        if (col == 0 && row == 0)
+                        {
+                            row -= 1;
+                            break;
+                        }
+
+                        while (currentCell.GetValue() <= 9)
+                        {
+                            currentCell.Increment();
+                            if (_grid.CanBeCompleted())
+                            {
+                                break;
+                            }
+                        }
+
+                        if (currentCell.GetValue() == 10)
+                        {
+                            currentCell.Reset();
+                            var (nextRow, nextCol) = GetLastUnknownCell(row, col);
+
+                            row = nextRow;
+                            col = nextCol;
+                        }
+                    }
+                }
+
+                _colCount += 1;
+            }
+
+            _rowCount += 1;
+        }
+    }
+
     private (int nextRow, int nextCol) GetLastUnknownCell(int row, int col)
     {
         int startingRow;
@@ -129,5 +157,25 @@ public class SudokuGridSolver
                 }
             }
         }
+    }
+    
+    private static bool ExcludeValuesOnlyPossibleInOneCell(Cell[] block)
+    {
+        var valuesPossibleInOneCell = block
+            .SelectMany(r => r.GetPossibleValues())
+            .GroupBy(v => v)
+            .Where(g => g.Count() == 1)
+            .Select(g => g.Key);
+
+        var knownValues = block.Where(r => r.IsKnown()).Select(r => r.GetValue());
+
+        var valuesToUpdate = valuesPossibleInOneCell.Except(knownValues).ToArray();
+
+        foreach (var val in valuesToUpdate)
+        {
+            block.Single(r => r.HasPossibleValue(val)).SetKnownValue(val);
+        }
+
+        return valuesToUpdate.Any();
     }
 }
