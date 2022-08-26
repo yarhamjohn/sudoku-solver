@@ -8,7 +8,7 @@ var stopwatch = new Stopwatch();
 stopwatch.Start();
 
 // construct a 2D array of double-linked nodes
-var grid = SudokuGridBuilder.Build(inputDefinition);
+var grid = new SudokuGrid(inputDefinition);
 
 grid.Print();
 

@@ -34,6 +34,7 @@ public class Cell
     }
 
     public int GetValue() => _currentValue;
+    
     public void Increment() => _currentValue += 1;
 
     public void Reset() => _currentValue = 0;

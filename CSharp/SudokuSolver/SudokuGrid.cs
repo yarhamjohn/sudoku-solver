@@ -4,9 +4,14 @@ public class SudokuGrid
 {
     public readonly Cell[][] Grid;
 
-    public SudokuGrid(Cell[][] grid)
+    public SudokuGrid(string input)
     {
-        Grid = grid;
+        Grid = input
+            .Chunk(9)
+            .Select(x => x
+                .Select(y => new Cell(Convert.ToInt32(y.ToString())))
+                .ToArray())
+            .ToArray();
     }
 
     public bool IsComplete() =>
