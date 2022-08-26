@@ -3,7 +3,6 @@
 public class Cell
 {
     private readonly List<int> _possibleValues;
-
     private int _currentValue;
     
     public Cell(int input)

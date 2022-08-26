@@ -2,6 +2,7 @@
 
 public class SudokuGrid
 {
+    private readonly List<int> _expectedValues = new() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     private readonly Cell[][] _grid;
 
     public SudokuGrid(string input)
@@ -17,16 +18,16 @@ public class SudokuGrid
     public Cell GetCell(int row, int col) => _grid[row][col];
 
     public bool IsComplete() =>
-        GetRowBlocks()
-            .Concat(GetColumnBlocks())
-            .Concat(GetSquareBlocks())
-            .All(x => x.IsComplete());
+        GetRows()
+            .Concat(GetColumns())
+            .Concat(GetBoxes())
+            .All(BlockIsComplete);
 
     public bool CanBeCompleted() =>
-        GetRowBlocks()
-            .Concat(GetColumnBlocks())
-            .Concat(GetSquareBlocks())
-            .All(x => x.IsCompletable());
+        GetRows()
+            .Concat(GetColumns())
+            .Concat(GetBoxes())
+            .All(BlockIsCompletable);
 
     public void Print()
     {
@@ -39,14 +40,10 @@ public class SudokuGrid
     public IEnumerable<Cell[]> GetRows() =>
         _grid.Select(row => row.Select(n => n).ToArray());
 
-    private IEnumerable<SudokuBlock> GetRowBlocks() => GetRows().Select(r => new SudokuBlock(r));
-
     public IEnumerable<Cell[]> GetColumns() =>
         Enumerable.Range(0, 9).Select(x => _grid.Select(row => row[x]).ToArray());
 
-    private IEnumerable<SudokuBlock> GetColumnBlocks() => GetColumns().Select(c => new SudokuBlock(c));
-
-    public IEnumerable<Cell[]> GetSquares()
+    public IEnumerable<Cell[]> GetBoxes()
     {
         for (var row = 0; row < 9; row += 3)
         {
@@ -61,6 +58,18 @@ public class SudokuGrid
             }
         }
     }
+    
+    private bool BlockIsComplete(IEnumerable<Cell> block) =>
+        !_expectedValues.Except(block.Select(c => c.GetValue()).Distinct()).Any();
 
-    private IEnumerable<SudokuBlock> GetSquareBlocks() => GetSquares().Select(s => new SudokuBlock(s));
+    private bool BlockIsCompletable(IEnumerable<Cell> block)
+    {
+        var knownValues = block.Select(c => c.GetValue()).Where(v => v != 0).ToList();
+
+        var anyInvalidValues = !knownValues.Except(_expectedValues).Any();
+
+        var anyDuplicateValues = !knownValues.GroupBy(v => v).Any(g => g.Count() > 1);
+        
+        return anyInvalidValues && anyDuplicateValues;
+    }
 }

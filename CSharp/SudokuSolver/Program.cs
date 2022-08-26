@@ -1,31 +1,24 @@
-﻿using System.Diagnostics;
-using SudokuSolver;
+﻿using SudokuSolver;
 
-// Read the input
 var input = args[0];
 
-var stopwatch = new Stopwatch();
-stopwatch.Start();
-
-// construct a 2D array of double-linked nodes
 var grid = new SudokuGrid(input);
 
-grid.Print();
-
-// Apply basic rules to reduce known values in each cell
-SudokuGridSolver.ApplyRules(grid);
-
-// Use depth-first search with backtracking to brute force unknown cells
-var (rowCount, colCount) = SudokuGridSolver.Solve(grid);
-
 Console.WriteLine();
-Console.WriteLine($"-------------- Complete in {rowCount} row and {colCount} column iterations ----------------");
+Console.WriteLine("-------------- Starting grid --------------");
 Console.WriteLine();
 
 grid.Print();
 
+var solver = new SudokuGridSolver(grid);
+
+solver.ApplyRules();
+solver.Solve();
+
+var (rowCount, colCount, elapsedTime) = solver.GetMetrics();
+
 Console.WriteLine();
-Console.WriteLine($"Time elapsed: {stopwatch.Elapsed}");
+Console.WriteLine($"-------------- Completed in {elapsedTime} with {rowCount} row and {colCount} column iterations --------------");
+Console.WriteLine();
 
-stopwatch.Stop();
-
+grid.Print();
