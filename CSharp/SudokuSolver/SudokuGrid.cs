@@ -17,12 +17,6 @@ public class SudokuGrid
 
     public Cell GetCell(int row, int col) => _grid[row][col];
 
-    public bool IsComplete() =>
-        GetRows()
-            .Concat(GetColumns())
-            .Concat(GetBoxes())
-            .All(BlockIsComplete);
-
     public bool CanBeCompleted() =>
         GetRows()
             .Concat(GetColumns())
@@ -58,18 +52,17 @@ public class SudokuGrid
             }
         }
     }
-    
-    private bool BlockIsComplete(IEnumerable<Cell> block) =>
-        !_expectedValues.Except(block.Select(c => c.GetValue()).Distinct()).Any();
 
     private bool BlockIsCompletable(IEnumerable<Cell> block)
     {
+        // Not de-duplicatable with the same method in SudokuGridSolver as that method
+        // relies on IsKnown() which does not get updated during the search increments
         var knownValues = block.Select(c => c.GetValue()).Where(v => v != 0).ToList();
 
-        var anyInvalidValues = !knownValues.Except(_expectedValues).Any();
+        var anyInvalidValues = knownValues.Except(_expectedValues).Any();
 
-        var anyDuplicateValues = !knownValues.GroupBy(v => v).Any(g => g.Count() > 1);
-        
-        return anyInvalidValues && anyDuplicateValues;
+        var anyDuplicateValues = knownValues.GroupBy(v => v).Any(g => g.Count() > 1);
+
+        return !anyInvalidValues && !anyDuplicateValues;
     }
 }

@@ -144,12 +144,12 @@ public class SudokuGridSolver
         return (0, 0);
     }
 
-    private static void ExcludeValuesKnownInBlock(IEnumerable<Cell[]> rows)
+    private static void ExcludeValuesKnownInBlock(IEnumerable<Cell[]> blocks)
     {
-        foreach (var row in rows)
+        foreach (var block in blocks)
         {
-            var knownValues = row.Select(r => r.GetValue()).Where(v => v != 0).ToList();
-            foreach (var cell in row)
+            var knownValues = GetKnownValues(block);
+            foreach (var cell in block)
             {
                 if (!cell.IsKnown())
                 {
@@ -158,7 +158,10 @@ public class SudokuGridSolver
             }
         }
     }
-    
+
+    private static List<int> GetKnownValues(Cell[] block) => 
+        block.Where(c => c.IsKnown()).Select(c => c.GetValue()).ToList();
+
     private static bool ExcludeValuesOnlyPossibleInOneCell(Cell[] block)
     {
         var valuesPossibleInOneCell = block
@@ -167,13 +170,11 @@ public class SudokuGridSolver
             .Where(g => g.Count() == 1)
             .Select(g => g.Key);
 
-        var knownValues = block.Where(r => r.IsKnown()).Select(r => r.GetValue());
-
-        var valuesToUpdate = valuesPossibleInOneCell.Except(knownValues).ToArray();
+        var valuesToUpdate = valuesPossibleInOneCell.Except(GetKnownValues(block)).ToArray();
 
         foreach (var val in valuesToUpdate)
         {
-            block.Single(r => r.HasPossibleValue(val)).SetKnownValue(val);
+            block.Single(c => c.HasPossibleValue(val)).SetKnownValue(val);
         }
 
         return valuesToUpdate.Any();
